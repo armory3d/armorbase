@@ -93,8 +93,13 @@ class Path {
 		return p.endsWith(".json");
 	}
 
+	public static function isText(path: String): Bool {
+		var p = path.toLowerCase();
+		return p.endsWith(".txt");
+	}
+
 	public static function isKnown(path: String): Bool {
-		return isMesh(path) || isTexture(path) || isFont(path) || isProject(path) || isPlugin(path);
+		return isMesh(path) || isTexture(path) || isFont(path) || isProject(path) || isPlugin(path) || isText(path);
 	}
 
 	static function checkExt(p: String, exts: Array<String>): Bool {
