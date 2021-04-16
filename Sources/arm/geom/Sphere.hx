@@ -11,7 +11,7 @@ class Sphere {
 	public var name = "";
 	public var hasNext = false;
 
-	public function new(radius = 1.0, widthSegments = 32, heightSegments = 16) {
+	public function new(radius = 1.0, widthSegments = 32, heightSegments = 16, stretchUV = true) {
 		// Pack positions to (-1, 1) range
 		scalePos = radius;
 		var inv = (1 / scalePos) * 32767;
@@ -29,6 +29,7 @@ class Sphere {
 		for (y in 0...heightVerts) {
 			var v = y / heightSegments;
 			var vFlip = 1.0 - v;
+			if (!stretchUV) vFlip /= 2;
 			var uOff = y == 0 ? 0.5 / widthSegments : y == heightSegments ? -0.5 / widthSegments : 0.0;
 			for (x in 0...widthVerts) {
 				var u = x / widthSegments;
