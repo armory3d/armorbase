@@ -1591,8 +1591,14 @@ class MaterialParser {
 			curshader.write('if (texCoordBlend.z > 0) $tex_store += texture($tex_name, ${uv_name}2.xy) * texCoordBlend.z;');
 		}
 		else {
-			textureMap.set(tex_store, 'texture($tex_name, $uv_name.xy)');
-			curshader.write('vec4 $tex_store = texture($tex_name, $uv_name.xy);');
+			if (curshader == frag) {
+				textureMap.set(tex_store, 'texture($tex_name, $uv_name.xy)');
+				curshader.write('vec4 $tex_store = texture($tex_name, $uv_name.xy);');
+			}
+			else {
+				textureMap.set(tex_store, 'textureLod($tex_name, $uv_name.xy, 0.0)');
+				curshader.write('vec4 $tex_store = textureLod($tex_name, $uv_name.xy, 0.0);');
+			}
 			if (!tex.file.endsWith(".jpg")) { // Pre-mult alpha
 				curshader.write('$tex_store.rgb *= $tex_store.a;');
 			}
