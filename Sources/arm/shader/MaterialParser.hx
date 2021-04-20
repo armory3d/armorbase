@@ -1417,6 +1417,19 @@ class MaterialParser {
 			var col = parse_vector_input(node.inputs[0]);
 			return '((($col.r * 0.3 + $col.g * 0.59 + $col.b * 0.11) / 3.0) * 2.5)';
 		}
+		else if (node.type == "SEPHSV") {
+			curshader.add_function(ShaderFunctions.str_hue_sat);
+			var col = parse_vector_input(node.inputs[0]);
+			if (socket == node.outputs[0]) {
+				return 'rgb_to_hsv($col).r';
+			}
+			else if (socket == node.outputs[1]) {
+				return 'rgb_to_hsv($col).g';
+			}
+			else if (socket == node.outputs[2]) {
+				return 'rgb_to_hsv($col).b';
+			}
+		}
 		else if (node.type == "SEPRGB") {
 			var col = parse_vector_input(node.inputs[0]);
 			if (socket == node.outputs[0]) {
