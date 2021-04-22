@@ -974,6 +974,9 @@ class MaterialParser {
 			else if (op == "NORMALIZE") {
 				return 'normalize($vec1)';
 			}
+			else if (op == "MULTIPLY") {
+				return '($vec1 * $vec2)';
+			}
 		}
 		else if (node.type == "Displacement") {
 			var height = parse_value_input(node.inputs[0]);
