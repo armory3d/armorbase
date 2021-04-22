@@ -968,6 +968,12 @@ class MaterialParser {
 			else if (op == "DOT_PRODUCT") {
 				return to_vec3('dot($vec1, $vec2)');
 			}
+			else if(op == "LENGTH") {
+				return to_vec3('length($vec1)');
+			}
+			else if(op == "DISTANCE") {
+				return to_vec3('distance($vec1,$vec2)');
+			}
 			else if (op == "CROSS_PRODUCT") {
 				return 'cross($vec1, $vec2)';
 			}
@@ -976,6 +982,15 @@ class MaterialParser {
 			}
 			else if (op == "MULTIPLY") {
 				return '($vec1 * $vec2)';
+			}
+			else if (op == "DIVIDE") {
+				return 'vec3(${vec1}.x / (${vec2}.x == 0 ? 0.000001 : ${vec2}.x),${vec1}.y / (${vec2}.y == 0 ? 0.000001 : ${vec2}.y),${vec1}.z / (${vec2}.z == 0 ? 0.000001 : ${vec2}.z))';
+			}
+			else if (op == "PROJECT") {
+				return '(dot($vec1,$vec2)/dot($vec2,$vec2)*$vec2)';
+			}
+			else if (op == "REFLECT") {
+				return 'reflect($vec1,normalize($vec2))';
 			}
 		}
 		else if (node.type == "Displacement") {
@@ -1465,6 +1480,12 @@ class MaterialParser {
 			op = op.replace(" ", "_");
 			if (op == "DOT_PRODUCT") {
 				return 'dot($vec1, $vec2)';
+			}
+			else if(op == "LENGTH") {
+				return 'length($vec1)';
+			}
+			else if(op == "DISTANCE") {
+				return 'distance($vec1,$vec2)';
 			}
 			else {
 				return "0.0";
