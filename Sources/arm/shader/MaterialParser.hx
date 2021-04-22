@@ -1470,6 +1470,39 @@ class MaterialParser {
 				return "0.0";
 			}
 		}
+		else if (node.type == "CLAMP") {
+			var val = parse_value_input(node.inputs[0]);
+			var min = parse_value_input(node.inputs[1]);
+			var max = parse_value_input(node.inputs[2]);
+			var but = node.buttons[0]; //operation; 
+			var op: String = but.data[but.default_value].toUpperCase();
+			op = op.replace(" ", "_");
+			
+			if (op == "MIN_MAX") {
+				return '(clamp($val, $min, $max))';
+			}
+			else if (op == "RANGE") {
+				return '(clamp($val, min($min,$max), max($min,$max)))';
+			}
+		}
+		else if (node.type == "MAPRANGE") {
+			var val = parse_value_input(node.inputs[0]);
+			var fmin = parse_value_input(node.inputs[1]);
+			var fmax = parse_value_input(node.inputs[2]);
+			var tmin = parse_value_input(node.inputs[3]);
+			var tmax = parse_value_input(node.inputs[4]);
+			
+			var use_clamp = node.buttons[0].default_value == true;
+			
+			var a = '(($tmin - $tmax)/($fmin-$fmax))';
+			var out_val = '($a*$val + $tmin - $a*$fmin)';
+			if (use_clamp) {
+				return '(clamp($out_val, $tmin, $tmax))';
+			}
+			else {
+				return out_val;
+			}
+		}
 		else if (customNodes.get(node.type) != null) {
 			return customNodes.get(node.type)(node, socket);
 		}

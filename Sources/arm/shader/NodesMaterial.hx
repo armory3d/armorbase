@@ -2467,6 +2467,127 @@ class NodesMaterial {
 						output: 0
 					}
 				]
+			},
+			{
+				id: 0,
+				name: _tr("Clamp"),
+				type: "CLAMP",
+				x: 0,
+				y: 0,
+				color: 0xff62676d,
+				inputs: [
+					{
+						id: 0,
+						node_id: 0,
+						name: _tr("Value"),
+						type: "VALUE",
+						color: 0xffa1a1a1,
+						default_value: 0.5
+					},
+					{
+						id: 0,
+						node_id: 0,
+						name: _tr("Min"),
+						type: "VALUE",
+						color: 0xffa1a1a1,
+						default_value: 0.0
+					},
+					{
+						id: 0,
+						node_id: 0,
+						name: _tr("Max"),
+						type: "VALUE",
+						color: 0xffa1a1a1,
+						default_value: 1.0
+					}
+				],
+				outputs: [
+					{
+						id: 0,
+						node_id: 0,
+						name: _tr("Value"),
+						type: "VALUE",
+						color: 0xffa1a1a1,
+						default_value: 0.0
+					}
+				],
+				buttons: [
+					{
+						name: _tr("operation"),
+						type: "ENUM",
+						data: [_tr("Min Max"), _tr("Range")],
+						default_value: 0,
+						output: 0
+					}
+				]
+			},
+			{
+				id: 0,
+				name: _tr("Map Range"),
+				type: "MAPRANGE",
+				x: 0,
+				y: 0,
+				color: 0xff62676d,
+				inputs: [
+					{
+						id: 0,
+						node_id: 0,
+						name: _tr("Value"),
+						type: "VALUE",
+						color: 0xffa1a1a1,
+						default_value: 0.5
+					},
+					{
+						id: 0,
+						node_id: 0,
+						name: _tr("From Min"),
+						type: "VALUE",
+						color: 0xffa1a1a1,
+						default_value: 0.0
+					},
+					{
+						id: 0,
+						node_id: 0,
+						name: _tr("From Max"),
+						type: "VALUE",
+						color: 0xffa1a1a1,
+						default_value: 1.0
+					},
+					{
+						id: 0,
+						node_id: 0,
+						name: _tr("To Min"),
+						type: "VALUE",
+						color: 0xffa1a1a1,
+						default_value: 0.0
+					},
+					{
+						id: 0,
+						node_id: 0,
+						name: _tr("To Max"),
+						type: "VALUE",
+						color: 0xffa1a1a1,
+						default_value: 1.0
+					}
+				],
+				outputs: [
+					{
+						id: 0,
+						node_id: 0,
+						name: _tr("Value"),
+						type: "VALUE",
+						color: 0xffa1a1a1,
+						default_value: 0.0
+					}
+				],
+				buttons: [
+					{
+						name: _tr("use_clamp"),
+						type: "BOOL",
+						default_value: false,
+						output: 0
+					}
+				]
 			}
 		],
 		[ // Input
