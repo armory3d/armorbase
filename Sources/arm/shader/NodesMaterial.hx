@@ -2462,7 +2462,7 @@ class NodesMaterial {
 					{
 						name: _tr("operation"),
 						type: "ENUM",
-						data: [_tr("Add"), _tr("Subtract"), _tr("Multiply"), _tr("Divide"), _tr("Average"), _tr("Dot Product"), _tr("Cross Product"), _tr("Normalize"), _tr("Project"), _tr("Reflect"),_tr("Length"), _tr("Distance")],
+						data: [_tr("Add"), _tr("Subtract"), _tr("Multiply"), _tr("Divide"), _tr("Average"), _tr("Dot Product"), _tr("Cross Product"), _tr("Normalize"), _tr("Project"), _tr("Reflect"), _tr("Length"), _tr("Distance")],
 						default_value: 0,
 						output: 0
 					}

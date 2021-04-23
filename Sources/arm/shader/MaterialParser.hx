@@ -968,11 +968,11 @@ class MaterialParser {
 			else if (op == "DOT_PRODUCT") {
 				return to_vec3('dot($vec1, $vec2)');
 			}
-			else if(op == "LENGTH") {
+			else if (op == "LENGTH") {
 				return to_vec3('length($vec1)');
 			}
-			else if(op == "DISTANCE") {
-				return to_vec3('distance($vec1,$vec2)');
+			else if (op == "DISTANCE") {
+				return to_vec3('distance($vec1, $vec2)');
 			}
 			else if (op == "CROSS_PRODUCT") {
 				return 'cross($vec1, $vec2)';
@@ -984,13 +984,13 @@ class MaterialParser {
 				return '($vec1 * $vec2)';
 			}
 			else if (op == "DIVIDE") {
-				return 'vec3(${vec1}.x / (${vec2}.x == 0 ? 0.000001 : ${vec2}.x),${vec1}.y / (${vec2}.y == 0 ? 0.000001 : ${vec2}.y),${vec1}.z / (${vec2}.z == 0 ? 0.000001 : ${vec2}.z))';
+				return 'vec3(${vec1}.x / (${vec2}.x == 0 ? 0.000001 : ${vec2}.x), ${vec1}.y / (${vec2}.y == 0 ? 0.000001 : ${vec2}.y), ${vec1}.z / (${vec2}.z == 0 ? 0.000001 : ${vec2}.z))';
 			}
 			else if (op == "PROJECT") {
-				return '(dot($vec1,$vec2)/dot($vec2,$vec2)*$vec2)';
+				return '(dot($vec1, $vec2) / dot($vec2, $vec2) * $vec2)';
 			}
 			else if (op == "REFLECT") {
-				return 'reflect($vec1,normalize($vec2))';
+				return 'reflect($vec1, normalize($vec2))';
 			}
 		}
 		else if (node.type == "Displacement") {
@@ -1481,11 +1481,11 @@ class MaterialParser {
 			if (op == "DOT_PRODUCT") {
 				return 'dot($vec1, $vec2)';
 			}
-			else if(op == "LENGTH") {
+			else if (op == "LENGTH") {
 				return 'length($vec1)';
 			}
-			else if(op == "DISTANCE") {
-				return 'distance($vec1,$vec2)';
+			else if (op == "DISTANCE") {
+				return 'distance($vec1, $vec2)';
 			}
 			else {
 				return "0.0";
@@ -1495,15 +1495,15 @@ class MaterialParser {
 			var val = parse_value_input(node.inputs[0]);
 			var min = parse_value_input(node.inputs[1]);
 			var max = parse_value_input(node.inputs[2]);
-			var but = node.buttons[0]; //operation; 
+			var but = node.buttons[0]; //operation;
 			var op: String = but.data[but.default_value].toUpperCase();
 			op = op.replace(" ", "_");
-			
+
 			if (op == "MIN_MAX") {
 				return '(clamp($val, $min, $max))';
 			}
 			else if (op == "RANGE") {
-				return '(clamp($val, min($min,$max), max($min,$max)))';
+				return '(clamp($val, min($min, $max), max($min, $max)))';
 			}
 		}
 		else if (node.type == "MAPRANGE") {
@@ -1512,11 +1512,11 @@ class MaterialParser {
 			var fmax = parse_value_input(node.inputs[2]);
 			var tmin = parse_value_input(node.inputs[3]);
 			var tmax = parse_value_input(node.inputs[4]);
-			
+
 			var use_clamp = node.buttons[0].default_value == true;
-			
-			var a = '(($tmin - $tmax)/($fmin-$fmax))';
-			var out_val = '($a*$val + $tmin - $a*$fmin)';
+
+			var a = '(($tmin - $tmax) / ($fmin - $fmax))';
+			var out_val = '($a * $val + $tmin - $a * $fmin)';
 			if (use_clamp) {
 				return '(clamp($out_val, $tmin, $tmax))';
 			}
