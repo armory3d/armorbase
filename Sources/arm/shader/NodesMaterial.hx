@@ -2282,7 +2282,7 @@ class NodesMaterial {
 					{
 						name: _tr("operation"),
 						type: "ENUM",
-						data: [_tr("Add"), _tr("Subtract"), _tr("Multiply"), _tr("Divide"), _tr("Power"), _tr("Logarithm"), _tr("Square Root"), _tr("Absolute"), _tr("Minimum"), _tr("Maximum"), _tr("Less Than"), _tr("Greater Than"), _tr("Round"), _tr("Floor"), _tr("Ceil"), _tr("Fract"), _tr("Modulo"), _tr("Sine"), _tr("Cosine"), _tr("Tangent"), _tr("Arcsine"), _tr("Arccosine"), _tr("Arctangent"), _tr("Arctan2")],
+						data: [_tr("Add"), _tr("Subtract"), _tr("Multiply"), _tr("Divide"), _tr("Power"), _tr("Logarithm"), _tr("Square Root"), _tr("Absolute"), _tr("Minimum"), _tr("Maximum"), _tr("Less Than"), _tr("Greater Than"), _tr("Round"), _tr("Floor"), _tr("Ceil"), _tr("Fract"), _tr("Modulo"), _tr("Ping-Pong"), _tr("Sine"), _tr("Cosine"), _tr("Tangent"), _tr("Arcsine"), _tr("Arccosine"), _tr("Arctangent"), _tr("Arctan2")],
 						default_value: 0,
 						output: 0
 					},

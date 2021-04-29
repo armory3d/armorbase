@@ -1399,6 +1399,9 @@ class MaterialParser {
 			else if (op == "MODULO") {
 				out_val = 'mod($val1, $val2)';
 			}
+			else if (op == "PING-PONG") {
+				out_val = '(($val2 != 0.0) ? abs(fract(($val1 - $val2) / ($val2 * 2.0)) * $val2 * 2.0 - $val2) : 0.0)';
+			}
 			else if (op == "SINE") {
 				out_val = 'sin($val1)';
 			}
