@@ -1250,6 +1250,12 @@ class NodesMaterial {
 						type: "ENUM",
 						default_value: 0,
 						data: [_tr("linear"), _tr("srgb")]
+					},
+					{
+						name: _tr("Invert color"),
+						type: "BOOL",
+						default_value: false,
+						output: 0
 					}
 				]
 			},
