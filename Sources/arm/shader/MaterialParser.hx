@@ -935,8 +935,14 @@ class MaterialParser {
 		}
 		else if (node.type == "NORMAL_MAP") {
 			var strength = parse_value_input(node.inputs[0]);
-			parse_normal_map_color_input(node.inputs[1], strength);
-			return null;
+			var norm = parse_vector_input(node.inputs[1]);
+			
+			var store = store_var_name(node);
+			curshader.write('vec3 ${store}_texn = $norm * 2.0 - 1.0;');
+			curshader.write('${store}_texn.xy = $strength * ${store}_texn.xy;');
+			curshader.write('${store}_texn = normalize(${store}_texn);');
+			
+			return '(0.5*${store}_texn + 0.5)';
 		}
 		else if (node.type == "VECT_TRANSFORM") {
 		// 	#type = node.vector_type

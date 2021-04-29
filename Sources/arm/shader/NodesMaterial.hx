@@ -1980,6 +1980,43 @@ class NodesMaterial {
 			},
 			{
 				id: 0,
+				name: _tr("Normal Map"),
+				type: "NORMAL_MAP",
+				x: 0,
+				y: 0,
+				color: 0xff522c99,
+				inputs: [
+					{
+						id: 0,
+						node_id: 0,
+						name: _tr("Stength"),
+						type: "VALUE",
+						color: 0xffa1a1a1,
+						default_value: 1.0
+					},
+					{
+						id: 0,
+						node_id: 0,
+						name: _tr("Normal"),
+						type: "VECTOR",
+						color: -10238109,
+						default_value: f32([0.5, 0.5, 0.5])
+					}
+				],
+				outputs: [
+					{
+						id: 0,
+						node_id: 0,
+						name: _tr("Normal"),
+						type: "VECTOR",
+						color: -10238109,
+						default_value: f32([0.5, 0.5, 0.5])
+					}
+				],
+				buttons: []
+			},
+			{
+				id: 0,
 				name: _tr("Vector Curves"),
 				type: "CURVE_VEC",
 				x: 0,
