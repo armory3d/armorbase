@@ -888,8 +888,8 @@ class MaterialParser {
 			var height = parse_value_input(node.inputs[2]);
 			var nor = parse_vector_input(node.inputs[3]);
 			var sample_bump_res = store_var_name(node) + "_bump";
-			curshader.write('float ${sample_bump_res}_x = dFdx($height) * ($strength) * 16.0;');
-			curshader.write('float ${sample_bump_res}_y = dFdy($height) * ($strength) * 16.0;');
+			curshader.write('float ${sample_bump_res}_x = dFdx(float($height)) * ($strength) * 16.0;');
+			curshader.write('float ${sample_bump_res}_y = dFdy(float($height)) * ($strength) * 16.0;');
 			return '(normalize(vec3(${sample_bump_res}_x, ${sample_bump_res}_y, 1.0) + $nor) * vec3(0.5, 0.5, 0.5) + vec3(0.5, 0.5, 0.5))';
 		}
 		else if (node.type == "MAPPING") {
