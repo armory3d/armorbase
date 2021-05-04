@@ -1868,7 +1868,6 @@ class NodesMaterial {
 					{
 						id: 0,
 						node_id: 0,
-						// name: _tr("Normal"),
 						name: _tr("Normal Map"),
 						type: "VECTOR",
 						color: -10238109,
@@ -1992,7 +1991,9 @@ class NodesMaterial {
 						name: _tr("Stength"),
 						type: "VALUE",
 						color: 0xffa1a1a1,
-						default_value: 1.0
+						default_value: 1.0,
+						min: 0.0,
+						max: 2.0
 					},
 					{
 						id: 0,
