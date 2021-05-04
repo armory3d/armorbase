@@ -2001,7 +2001,7 @@ class NodesMaterial {
 						name: _tr("Normal Map"),
 						type: "VECTOR",
 						color: -10238109,
-						default_value: f32([0.5, 0.5, 0.5])
+						default_value: f32([0.5, 0.5, 1.0])
 					}
 				],
 				outputs: [
@@ -2011,7 +2011,7 @@ class NodesMaterial {
 						name: _tr("Normal Map"),
 						type: "VECTOR",
 						color: -10238109,
-						default_value: f32([0.5, 0.5, 0.5])
+						default_value: f32([0.5, 0.5, 1.0])
 					}
 				],
 				buttons: []
