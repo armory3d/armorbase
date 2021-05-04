@@ -490,7 +490,8 @@ class MaterialParser {
 			var tex = make_texture(node, tex_name);
 			if (tex != null) {
 				var to_linear = node.buttons[1].default_value == 1; // srgb to linear
-				var texstore = texture_store(node, tex, tex_name, to_linear);
+				var invert_color = node.buttons[2].default_value == true;
+				var texstore = texture_store(node, tex, tex_name, to_linear, invert_color);
 				return '$texstore.rgb';
 			}
 			else {
@@ -934,8 +935,14 @@ class MaterialParser {
 		}
 		else if (node.type == "NORMAL_MAP") {
 			var strength = parse_value_input(node.inputs[0]);
-			parse_normal_map_color_input(node.inputs[1], strength);
-			return null;
+			var norm = parse_vector_input(node.inputs[1]);
+			
+			var store = store_var_name(node);
+			curshader.write('vec3 ${store}_texn = $norm * 2.0 - 1.0;');
+			curshader.write('${store}_texn.xy = $strength * ${store}_texn.xy;');
+			curshader.write('${store}_texn = normalize(${store}_texn);');
+			
+			return '(0.5*${store}_texn + 0.5)';
 		}
 		else if (node.type == "VECT_TRANSFORM") {
 		// 	#type = node.vector_type
@@ -1264,7 +1271,8 @@ class MaterialParser {
 			var tex = make_texture(node, tex_name);
 			if (tex != null) {
 				var to_linear = node.buttons[1].default_value == 1; // srgb to linear
-				var texstore = texture_store(node, tex, tex_name, to_linear);
+				var invert_color = node.buttons[2].default_value == true;
+				var texstore = texture_store(node, tex, tex_name, to_linear, invert_color);
 				return '$texstore.a';
 			}
 		}
@@ -1390,6 +1398,9 @@ class MaterialParser {
 			}
 			else if (op == "MODULO") {
 				out_val = 'mod($val1, $val2)';
+			}
+			else if (op == "PING-PONG") {
+				out_val = '(($val2 != 0.0) ? abs(fract(($val1 - $val2) / ($val2 * 2.0)) * $val2 * 2.0 - $val2) : 0.0)';
 			}
 			else if (op == "SINE") {
 				out_val = 'sin($val1)';
@@ -1631,7 +1642,7 @@ class MaterialParser {
 		return node_name(node) + "_store";
 	}
 
-	static function texture_store(node: TNode, tex: TBindTexture, tex_name: String, to_linear = false): String {
+	static function texture_store(node: TNode, tex: TBindTexture, tex_name: String, to_linear = false, invert_color = false): String {
 		matcon.bind_textures.push(tex);
 		curshader.context.add_elem("tex", "short2norm");
 		curshader.add_uniform("sampler2D " + tex_name);
@@ -1676,6 +1687,10 @@ class MaterialParser {
 
 		if (to_linear) {
 			curshader.write('$tex_store.rgb = pow($tex_store.rgb, vec3(2.2, 2.2, 2.2));');
+		}
+		
+		if (invert_color) {
+			curshader.write('$tex_store.rgb = 1.0 - $tex_store.rgb;');
 		}
 		return tex_store;
 	}

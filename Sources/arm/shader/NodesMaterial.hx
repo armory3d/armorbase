@@ -1250,6 +1250,12 @@ class NodesMaterial {
 						type: "ENUM",
 						default_value: 0,
 						data: [_tr("linear"), _tr("srgb")]
+					},
+					{
+						name: _tr("Invert color"),
+						type: "BOOL",
+						default_value: false,
+						output: 0
 					}
 				]
 			},
@@ -1974,6 +1980,43 @@ class NodesMaterial {
 			},
 			{
 				id: 0,
+				name: _tr("Normal Map"),
+				type: "NORMAL_MAP",
+				x: 0,
+				y: 0,
+				color: 0xff522c99,
+				inputs: [
+					{
+						id: 0,
+						node_id: 0,
+						name: _tr("Stength"),
+						type: "VALUE",
+						color: 0xffa1a1a1,
+						default_value: 1.0
+					},
+					{
+						id: 0,
+						node_id: 0,
+						name: _tr("Normal"),
+						type: "VECTOR",
+						color: -10238109,
+						default_value: f32([0.5, 0.5, 0.5])
+					}
+				],
+				outputs: [
+					{
+						id: 0,
+						node_id: 0,
+						name: _tr("Normal"),
+						type: "VECTOR",
+						color: -10238109,
+						default_value: f32([0.5, 0.5, 0.5])
+					}
+				],
+				buttons: []
+			},
+			{
+				id: 0,
 				name: _tr("Vector Curves"),
 				type: "CURVE_VEC",
 				x: 0,
@@ -2239,7 +2282,7 @@ class NodesMaterial {
 					{
 						name: _tr("operation"),
 						type: "ENUM",
-						data: [_tr("Add"), _tr("Subtract"), _tr("Multiply"), _tr("Divide"), _tr("Power"), _tr("Logarithm"), _tr("Square Root"), _tr("Absolute"), _tr("Minimum"), _tr("Maximum"), _tr("Less Than"), _tr("Greater Than"), _tr("Round"), _tr("Floor"), _tr("Ceil"), _tr("Fract"), _tr("Modulo"), _tr("Sine"), _tr("Cosine"), _tr("Tangent"), _tr("Arcsine"), _tr("Arccosine"), _tr("Arctangent"), _tr("Arctan2")],
+						data: [_tr("Add"), _tr("Subtract"), _tr("Multiply"), _tr("Divide"), _tr("Power"), _tr("Logarithm"), _tr("Square Root"), _tr("Absolute"), _tr("Minimum"), _tr("Maximum"), _tr("Less Than"), _tr("Greater Than"), _tr("Round"), _tr("Floor"), _tr("Ceil"), _tr("Fract"), _tr("Modulo"), _tr("Ping-Pong"), _tr("Sine"), _tr("Cosine"), _tr("Tangent"), _tr("Arcsine"), _tr("Arccosine"), _tr("Arctangent"), _tr("Arctan2")],
 						default_value: 0,
 						output: 0
 					},
