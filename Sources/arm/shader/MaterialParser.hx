@@ -1010,7 +1010,7 @@ class MaterialParser {
 		return "vec3(0.0, 0.0, 0.0)";
 	}
 
-	static function parse_normal_map_color_input(inp: TNodeSocket, strength = "1.0") {
+	static function parse_normal_map_color_input(inp: TNodeSocket) {
 		frag.write_normal++;
 		out_normaltan = parse_vector_input(inp);
 		if (!arm_export_tangents) {
