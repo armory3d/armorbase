@@ -1252,7 +1252,7 @@ class NodesMaterial {
 						data: [_tr("linear"), _tr("srgb")]
 					},
 					{
-						name: _tr("Invert color"),
+						name: _tr("Invert Color"),
 						type: "BOOL",
 						default_value: false,
 						output: 0
