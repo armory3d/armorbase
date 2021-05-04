@@ -1998,7 +1998,7 @@ class NodesMaterial {
 					{
 						id: 0,
 						node_id: 0,
-						name: _tr("Normal"),
+						name: _tr("Normal Map"),
 						type: "VECTOR",
 						color: -10238109,
 						default_value: f32([0.5, 0.5, 0.5])
@@ -2008,7 +2008,7 @@ class NodesMaterial {
 					{
 						id: 0,
 						node_id: 0,
-						name: _tr("Normal"),
+						name: _tr("Normal Map"),
 						type: "VECTOR",
 						color: -10238109,
 						default_value: f32([0.5, 0.5, 0.5])
