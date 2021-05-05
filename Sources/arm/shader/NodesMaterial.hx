@@ -1249,7 +1249,7 @@ class NodesMaterial {
 						name: _tr("Color Space"),
 						type: "ENUM",
 						default_value: 0,
-						data: [_tr("linear"), _tr("srgb")]
+						data: [_tr("linear"), _tr("srgb"), _tr("DirectX normal map")]
 					},
 					{
 						name: _tr("Invert Color"),

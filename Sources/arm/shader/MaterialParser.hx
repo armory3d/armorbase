@@ -489,9 +489,9 @@ class MaterialParser {
 			var tex_name = node_name(node);
 			var tex = make_texture(node, tex_name);
 			if (tex != null) {
-				var to_linear = node.buttons[1].default_value == 1; // srgb to linear
+				var color_space = node.buttons[1].default_value;
 				var invert_color = node.buttons[2].default_value == true;
-				var texstore = texture_store(node, tex, tex_name, to_linear, invert_color);
+				var texstore = texture_store(node, tex, tex_name, color_space, invert_color);
 				return '$texstore.rgb';
 			}
 			else {
@@ -1270,9 +1270,9 @@ class MaterialParser {
 			var tex_name = node_name(node);
 			var tex = make_texture(node, tex_name);
 			if (tex != null) {
-				var to_linear = node.buttons[1].default_value == 1; // srgb to linear
+				var color_space = node.buttons[1].default_value; 
 				var invert_color = node.buttons[2].default_value == true;
-				var texstore = texture_store(node, tex, tex_name, to_linear, invert_color);
+				var texstore = texture_store(node, tex, tex_name, color_space, invert_color);
 				return '$texstore.a';
 			}
 		}
@@ -1642,7 +1642,7 @@ class MaterialParser {
 		return node_name(node) + "_store";
 	}
 
-	static function texture_store(node: TNode, tex: TBindTexture, tex_name: String, to_linear = false, invert_color = false): String {
+	static function texture_store(node: TNode, tex: TBindTexture, tex_name: String, color_space : Int, invert_color = false): String {
 		matcon.bind_textures.push(tex);
 		curshader.context.add_elem("tex", "short2norm");
 		curshader.add_uniform("sampler2D " + tex_name);
@@ -1685,8 +1685,11 @@ class MaterialParser {
 			}
 		}
 
-		if (to_linear) {
+		if (color_space == 1) { //SRGB to linear
 			curshader.write('$tex_store.rgb = pow($tex_store.rgb, vec3(2.2, 2.2, 2.2));');
+		}
+		else if(color_space == 2) { //From DirectX normal map to OpenGl normal map
+		    curshader.write('$tex_store.y = 1.0 - $tex_store.y;');
 		}
 
 		if (invert_color) {
