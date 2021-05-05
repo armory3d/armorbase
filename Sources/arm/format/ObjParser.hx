@@ -481,14 +481,14 @@ class ObjParser {
 	}
 
 	function readString(): String {
-		var s = "";
+		var begin = pos;
 		while (true) {
 			var c = bytes.get(pos);
 			if (c == "\n".code || c == "\r".code || c == " ".code) break;
 			pos++;
-			s += String.fromCharCode(c);
 		}
-		return s;
+		
+		return bytes.getString(begin,pos-begin);
 	}
 
 	function nextLine() {
