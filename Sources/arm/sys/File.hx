@@ -4,18 +4,6 @@ import haxe.io.Bytes;
 
 class File {
 
-	#if krom_windows
-	static inline var cmd_dir = "dir /b";
-	static inline var cmd_dir_nofile = "dir /b /ad";
-	static inline var cmd_copy = "copy";
-	static inline var cmd_del = "del /f";
-	#else
-	static inline var cmd_dir = "ls";
-	static inline var cmd_dir_nofile = "ls";
-	static inline var cmd_copy = "cp";
-	static inline var cmd_del = "rm";
-	#end
-
 	static var cloud: Map<String, Array<String>> = null;
 	static var cloudSizes: Map<String, Int> = null;
 
@@ -46,41 +34,19 @@ class File {
 	}
 
 	public static function createDirectory(path: String) {
-		#if krom_windows
-		Krom.sysCommand("mkdir " + path); // -p by default
-		#else
-		Krom.sysCommand("mkdir -p " + path);
-		#end
+		return Krom.createDirectory(path);
 	}
 
 	public static function copy(srcPath: String, dstPath: String) {
-		Krom.sysCommand(cmd_copy + ' "' + srcPath + '" "' + dstPath + '"');
+		return Krom.copyFile(srcPath,dstPath);
 	}
 
-	public static function start(path: String) {
-		#if krom_windows
-		Krom.sysCommand('start "" "' + path + '"');
-		#elseif krom_linux
-		Krom.sysCommand('xdg-open "' + path + '"');
-		#else
-		Krom.sysCommand('open "' + path + '"');
-		#end
-	}
-
-	public static function explorer(url: String) {
-		#if krom_windows
-		Krom.sysCommand('explorer "' + url + '"');
-		#elseif krom_linux
-		Krom.sysCommand('xdg-open "' + url + '"');
-		#elseif (krom_android || krom_ios)
-		Krom.loadUrl(url);
-		#else
-		Krom.sysCommand('open "' + url + '"');
-		#end
+	public static function openInStdApp(path: String) {
+		return Krom.openInStdApp(path);
 	}
 
 	public static function delete(path: String) {
-		Krom.sysCommand(cmd_del + ' "' + path + '"');
+		return Krom.deleteFile(path);
 	}
 
 	public static function exists(path: String): Bool {

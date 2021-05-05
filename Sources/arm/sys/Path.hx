@@ -47,14 +47,7 @@ class Path {
 	}
 
 	public static function workingDir(): String {
-		#if krom_windows
-		var cmd = "cd";
-		#else
-		var cmd = "echo $PWD";
-		#end
-		var save = data() + sep + "tmp.txt";
-		Krom.sysCommand(cmd + ' > "' + save + '"');
-		return haxe.io.Bytes.ofData(Krom.loadBlob(save)).toString().rtrim();
+		return Krom.workingDir();
 	}
 
 	public static function isMesh(path: String): Bool {
