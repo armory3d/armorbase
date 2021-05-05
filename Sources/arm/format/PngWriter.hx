@@ -29,54 +29,56 @@ import arm.format.PngData;
 
 class PngWriter {
 
-	var o : haxe.io.Output;
+	var o: haxe.io.Output;
 
 	public function new(o) {
 		this.o = o;
 		o.bigEndian = true;
 	}
 
-	public function write( png : PngData ) {
-		for( b in [137,80,78,71,13,10,26,10] )
+	public function write(png: PngData) {
+		for (b in [137,80,78,71,13,10,26,10]) {
 			o.writeByte(b);
-		for( c in png )
-			switch( c ) {
-			case CHeader(h):
-				var b = new haxe.io.BytesOutput();
-				b.bigEndian = true;
-				b.writeInt32(h.width);
-				b.writeInt32(h.height);
-				b.writeByte(h.colbits);
-				b.writeByte(switch( h.color ) {
-					case ColGrey(alpha): alpha ? 4 : 0;
-					case ColTrue(alpha): alpha ? 6 : 2;
-					case ColIndexed: 3;
-				});
-				b.writeByte(0);
-				b.writeByte(0);
-				b.writeByte(h.interlaced ? 1 : 0);
-				writeChunk("IHDR",b.getBytes());
-			case CEnd:
-				writeChunk("IEND",haxe.io.Bytes.alloc(0));
-			case CData(d):
-				writeChunk("IDAT",d);
-			case CPalette(b):
-				writeChunk("PLTE",b);
-			case CUnknown(id,data):
-				writeChunk(id,data);
+		}
+		for (c in png) {
+			switch (c) {
+				case CHeader(h):
+					var b = new haxe.io.BytesOutput();
+					b.bigEndian = true;
+					b.writeInt32(h.width);
+					b.writeInt32(h.height);
+					b.writeByte(h.colbits);
+					b.writeByte(switch(h.color) {
+						case ColGrey(alpha): alpha ? 4 : 0;
+						case ColTrue(alpha): alpha ? 6 : 2;
+						case ColIndexed: 3;
+					});
+					b.writeByte(0);
+					b.writeByte(0);
+					b.writeByte(h.interlaced ? 1 : 0);
+					writeChunk("IHDR", b.getBytes());
+				case CEnd:
+					writeChunk("IEND", haxe.io.Bytes.alloc(0));
+				case CData(d):
+					writeChunk("IDAT", d);
+				case CPalette(b):
+					writeChunk("PLTE", b);
+				case CUnknown(id, data):
+					writeChunk(id, data);
 			}
+		}
 	}
 
-	function writeChunk( id : String, data : haxe.io.Bytes ) {
+	function writeChunk(id: String, data: haxe.io.Bytes) {
 		o.writeInt32(data.length);
 		o.writeString(id);
 		o.write(data);
 		// compute CRC
 		var crc = new haxe.crypto.Crc32();
-		for( i in 0...4 )
+		for (i in 0...4) {
 			crc.byte(id.charCodeAt(i));
+		}
 		crc.update(data, 0, data.length);
 		o.writeInt32(crc.get());
 	}
-
 }

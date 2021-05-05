@@ -36,14 +36,18 @@ class NodeShaderContext {
 			depth_attachment: props.depth_attachment
 		};
 
-		if (props.color_writes_red != null)
+		if (props.color_writes_red != null) {
 			data.color_writes_red = props.color_writes_red;
-		if (props.color_writes_green != null)
+		}
+		if (props.color_writes_green != null) {
 			data.color_writes_green = props.color_writes_green;
-		if (props.color_writes_blue != null)
+		}
+		if (props.color_writes_blue != null) {
 			data.color_writes_blue = props.color_writes_blue;
-		if (props.color_writes_alpha != null)
+		}
+		if (props.color_writes_alpha != null) {
 			data.color_writes_alpha = props.color_writes_alpha;
+		}
 
 		tunits = data.texture_units = [];
 		constants = data.constants = [];
@@ -58,9 +62,11 @@ class NodeShaderContext {
 	}
 
 	public function is_elem(name: String): Bool {
-		for (elem in data.vertex_elements)
-			if (elem.name == name)
+		for (elem in data.vertex_elements) {
+			if (elem.name == name) {
 				return true;
+			}
+		}
 		return false;
 	}
 
@@ -78,13 +84,16 @@ class NodeShaderContext {
 	}
 
 	public function add_constant(ctype: String, name: String, link: String = null) {
-		for (c in constants)
-			if (c.name == name)
+		for (c in constants) {
+			if (c.name == name) {
 				return;
+			}
+		}
 
-		var c:TShaderConstant = { name: name, type: ctype };
-		if (link != null)
+		var c: TShaderConstant = { name: name, type: ctype };
+		if (link != null) {
 			c.link = link;
+		}
 		constants.push(c);
 	}
 

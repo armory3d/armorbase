@@ -209,8 +209,9 @@ class NodeShader {
 		var in_ext = '';
 		var out_ext = '';
 
-		for (a in includes)
+		for (a in includes) {
 			s += '#include "' + a + '"\n';
+		}
 
 		// Input structure
 		var index = 0;
@@ -602,18 +603,24 @@ class NodeShader {
 		var in_ext = '';
 		var out_ext = '';
 
-		for (a in includes)
+		for (a in includes) {
 			s += '#include "' + a + '"\n';
-		for (a in ins)
+		}
+		for (a in ins) {
 			s += 'in $a$in_ext;\n';
-		for (a in outs)
+		}
+		for (a in outs) {
 			s += 'out $a$out_ext;\n';
-		for (a in uniforms)
+		}
+		for (a in uniforms) {
 			s += 'uniform ' + a + ';\n';
-		for (a in sharedSamplers)
+		}
+		for (a in sharedSamplers) {
 			s += 'uniform ' + a + ';\n';
-		for (f in functions)
+		}
+		for (f in functions) {
 			s += f + '\n';
+		}
 		s += 'void main() {\n';
 		s += main_attribs;
 		s += main_textures;

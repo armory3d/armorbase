@@ -23,170 +23,163 @@
 package arm.format;
 
 enum FbxProp {
-	PInt( v : Int );
-	PFloat( v : Float );
-	PString( v : String );
-	PIdent( i : String );
-	PInts( v : Array<Int> );
-	PFloats( v : Array<Float> );
+	PInt(v: Int);
+	PFloat(v: Float);
+	PString(v: String);
+	PIdent(i: String);
+	PInts(v: Array<Int>);
+	PFloats(v: Array<Float>);
 }
 
 typedef FbxNode = {
-	var name : String;
-	var props : Array<FbxProp>;
-	var childs : Array<FbxNode>;
+	var name: String;
+	var props: Array<FbxProp>;
+	var childs: Array<FbxNode>;
 }
 
 class FbxTools {
 
-	public static function get( n : FbxNode, path : String, opt = false ) {
+	public static function get(n: FbxNode, path: String, opt = false) {
 		var parts = path.split(".");
 		var cur = n;
-		for( p in parts ) {
+		for (p in parts) {
 			var found = false;
-			for( c in cur.childs )
-				if( c.name == p ) {
+			for (c in cur.childs) {
+				if (c.name == p) {
 					cur = c;
 					found = true;
 					break;
 				}
-			if( !found ) {
-				if( opt )
-					return null;
+			}
+			if (!found) {
+				if (opt) return null;
 				throw n.name + " does not have " + path+" ("+p+" not found)";
 			}
 		}
 		return cur;
 	}
 
-	public static function getAll( n : FbxNode, path : String ) {
+	public static function getAll(n: FbxNode, path: String) {
 		var parts = path.split(".");
 		var cur = [n];
-		for( p in parts ) {
+		for (p in parts) {
 			var out = [];
-			for( n in cur )
-				for( c in n.childs )
-					if( c.name == p )
+			for (n in cur) {
+				for (c in n.childs) {
+					if (c.name == p) {
 						out.push(c);
+					}
+				}
+			}
 			cur = out;
-			if( cur.length == 0 )
-				return cur;
+			if (cur.length == 0) return cur;
 		}
 		return cur;
 	}
 
-	public static function getInts( n : FbxNode ) {
-		if( n.props.length != 1 )
+	public static function getInts(n: FbxNode) {
+		if (n.props.length != 1) {
 			throw n.name + " has " + n.props + " props";
-		switch( n.props[0] ) {
-		case PInts(v):
-			return v;
-		default:
-			throw n.name + " has " + n.props + " props";
+		}
+		switch (n.props[0]) {
+			case PInts(v):
+				return v;
+			default:
+				throw n.name + " has " + n.props + " props";
 		}
 	}
 
-	public static function getFloats( n : FbxNode ) {
-		if( n.props.length != 1 )
+	public static function getFloats(n: FbxNode) {
+		if (n.props.length != 1) {
 			throw n.name + " has " + n.props + " props";
-		switch( n.props[0] ) {
-		case PFloats(v):
-			return v;
-		case PInts(i):
-			var fl = new Array<Float>();
-			for( x in i )
-				fl.push(x);
-			n.props[0] = PFloats(fl); // keep data synchronized
-			// this is necessary for merging geometries since we are pushing directly into the
-			// float buffer
-			return fl;
-		default:
-			throw n.name + " has " + n.props + " props";
+		}
+		switch(n.props[0]) {
+			case PFloats(v):
+				return v;
+			case PInts(i):
+				var fl = new Array<Float>();
+				for(x in i) fl.push(x);
+				n.props[0] = PFloats(fl); // keep data synchronized
+				// this is necessary for merging geometries since we are pushing directly into the
+				// float buffer
+				return fl;
+			default:
+				throw n.name + " has " + n.props + " props";
 		}
 	}
 
-	public static function hasProp( n : FbxNode, p : FbxProp ) {
-		for( p2 in n.props )
-			if( Type.enumEq(p, p2) )
+	public static function hasProp(n: FbxNode, p: FbxProp) {
+		for (p2 in n.props) {
+			if (Type.enumEq(p, p2)) {
 				return true;
+			}
+		}
 		return false;
 	}
 
-	static inline function idToInt( f : Float ) {
-		#if (neko || hl)
-		// ids are unsigned
-		f %= 4294967296.;
-		if( f >= 2147483648. )
-			f -= 4294967296.;
-		else if( f < -2147483648. )
-			f += 4294967296.;
-		#end
+	static inline function idToInt(f: Float) {
 		return Std.int(f);
 	}
 
-	public static function toInt( n : FbxProp ) {
-		if( n == null ) throw "null prop";
-		return switch( n ) {
-		case PInt(v): v;
-		case PFloat(f): idToInt(f);
-		default: throw "Invalid prop " + n;
+	public static function toInt(n: FbxProp) {
+		if (n == null) throw "null prop";
+		return switch(n) {
+			case PInt(v): v;
+			case PFloat(f): idToInt(f);
+			default: throw "Invalid prop " + n;
 		}
 	}
 
-	public static function toFloat( n : FbxProp ) {
-		if( n == null ) throw "null prop";
-		return switch( n ) {
-		case PInt(v): v * 1.0;
-		case PFloat(v): v;
-		default: throw "Invalid prop " + n;
+	public static function toFloat(n: FbxProp) {
+		if (n == null) throw "null prop";
+		return switch(n) {
+			case PInt(v): v * 1.0;
+			case PFloat(v): v;
+			default: throw "Invalid prop " + n;
 		}
 	}
 
-	public static function toString( n : FbxProp ) {
-		if( n == null ) throw "null prop";
-		return switch( n ) {
-		case PString(v): v;
-		default: throw "Invalid prop " + n;
+	public static function toString(n: FbxProp) {
+		if (n == null) throw "null prop";
+		return switch(n) {
+			case PString(v): v;
+			default: throw "Invalid prop " + n;
 		}
 	}
 
-	public static function getId( n : FbxNode ) {
-		if( n.props.length != 3 )
-			throw n.name + " is not an object";
-		return switch( n.props[0] ) {
-		case PInt(id): id;
-		case PFloat(id) : idToInt(id);
-		default: throw n.name + " is not an object " + n.props;
+	public static function getId(n: FbxNode) {
+		if (n.props.length != 3) throw n.name + " is not an object";
+		return switch(n.props[0]) {
+			case PInt(id): id;
+			case PFloat(id): idToInt(id);
+			default: throw n.name + " is not an object " + n.props;
 		}
 	}
 
-	public static function getName( n : FbxNode ) {
-		if( n.props.length != 3 )
-			throw n.name + " is not an object";
-		return switch( n.props[1] ) {
-		case PString(n): n.split("::").pop();
-		default: throw n.name + " is not an object";
+	public static function getName(n: FbxNode) {
+		if (n.props.length != 3) throw n.name + " is not an object";
+		return switch(n.props[1]) {
+			case PString(n): n.split("::").pop();
+			default: throw n.name + " is not an object";
 		}
 	}
 
-	public static function getType( n : FbxNode ) {
-		if( n.props.length != 3 )
-			throw n.name + " is not an object";
-		return switch( n.props[2] ) {
-		case PString(n): n;
-		default: throw n.name + " is not an object";
+	public static function getType(n: FbxNode) {
+		if(n.props.length != 3) throw n.name + " is not an object";
+		return switch(n.props[2]) {
+			case PString(n): n;
+			default: throw n.name + " is not an object";
 		}
 	}
-
 }
 
 private enum Token {
-	TIdent( s : String );
-	TNode( s : String );
-	TInt( s : String );
-	TFloat( s : String );
-	TString( s : String );
-	TLength( v : Int );
+	TIdent(s: String);
+	TNode(s: String);
+	TInt(s: String);
+	TFloat(s: String);
+	TString(s: String);
+	TLength(v: Int);
 	TBraceOpen;
 	TBraceClose;
 	TColon;
@@ -195,155 +188,160 @@ private enum Token {
 
 class Parser {
 
-	var line : Int;
-	var buf : String;
-	var pos : Int;
-	var token : Null<Token>;
+	var line: Int;
+	var buf: String;
+	var pos: Int;
+	var token: Null<Token>;
 
-	function new() {
-	}
+	function new() {}
 
-	function parseText( str ) : FbxNode {
+	function parseText(str): FbxNode {
 		this.buf = str;
 		this.pos = 0;
 		this.line = 1;
 		token = null;
 		return {
-			name : "Root",
-			props : [PInt(0),PString("Root"),PString("Root")],
-			childs : parseNodes(),
+			name: "Root",
+			props: [PInt(0),PString("Root"),PString("Root")],
+			childs: parseNodes(),
 		};
 	}
 
 	function parseNodes() {
 		var nodes = [];
-		while( true ) {
-			switch( peek() ) {
-			case TEof, TBraceClose:
-				return nodes;
-			default:
+		while (true) {
+			switch(peek()) {
+				case TEof, TBraceClose:
+					return nodes;
+				default:
 			}
 			nodes.push(parseNode());
 		}
 		return nodes;
 	}
 
-	function parseNode() : FbxNode {
+	function parseNode(): FbxNode {
 		var t = next();
-		var name = switch( t ) {
-		case TNode(n): n;
-		default: unexpected(t);
+		var name = switch(t) {
+			case TNode(n): n;
+			default: unexpected(t);
 		};
 		var props = [], childs = null;
-		while( true ) {
+		while (true) {
 			t = next();
-			switch( t ) {
-			case TFloat(s):
-				props.push(PFloat(Std.parseFloat(s)));
-			case TInt(s):
-				props.push(PInt(Std.parseInt(s)));
-			case TString(s):
-				props.push(PString(s));
-			case TIdent(s):
-				props.push(PIdent(s));
-			case TBraceOpen, TBraceClose, TNode(_):
-				token = t;
-			case TLength(v):
-				except(TBraceOpen);
-				except(TNode("a"));
-				var ints : Array<Int> = [];
-				var floats : Array<Float> = null;
-				var i = 0;
-				while( i < v ) {
-					t = next();
-					switch( t ) {
-					case TColon:
-						continue;
-					case TInt(s):
-						i++;
-						if( floats == null )
-							ints.push(Std.parseInt(s));
-						else
-							floats.push(Std.parseInt(s));
-					case TFloat(s):
-						i++;
-						if( floats == null ) {
-							floats = [];
-							for( i in ints )
-								floats.push(i);
-							ints = null;
+			switch(t) {
+				case TFloat(s):
+					props.push(PFloat(Std.parseFloat(s)));
+				case TInt(s):
+					props.push(PInt(Std.parseInt(s)));
+				case TString(s):
+					props.push(PString(s));
+				case TIdent(s):
+					props.push(PIdent(s));
+				case TBraceOpen, TBraceClose, TNode(_):
+					token = t;
+				case TLength(v):
+					except(TBraceOpen);
+					except(TNode("a"));
+					var ints: Array<Int> = [];
+					var floats: Array<Float> = null;
+					var i = 0;
+					while (i < v) {
+						t = next();
+						switch(t) {
+							case TColon:
+								continue;
+							case TInt(s):
+								i++;
+								if (floats == null) {
+									ints.push(Std.parseInt(s));
+								}
+								else {
+									floats.push(Std.parseInt(s));
+								}
+							case TFloat(s):
+								i++;
+								if (floats == null) {
+									floats = [];
+									for(i in ints) {
+										floats.push(i);
+									}
+									ints = null;
+								}
+								floats.push(Std.parseFloat(s));
+							default:
+								unexpected(t);
 						}
-						floats.push(Std.parseFloat(s));
-					default:
-						unexpected(t);
 					}
-				}
-				props.push(floats == null ? PInts(ints) : PFloats(floats));
-				except(TBraceClose);
-				break;
-			default:
-				unexpected(t);
+					props.push(floats == null ? PInts(ints) : PFloats(floats));
+					except(TBraceClose);
+					break;
+				default:
+					unexpected(t);
 			}
 			t = next();
-			switch( t ) {
-			case TNode(_), TBraceClose:
-				token = t; // next
-				break;
-			case TColon:
-				// next prop
-			case TBraceOpen:
-				childs = parseNodes();
-				except(TBraceClose);
-				break;
-			default:
-				unexpected(t);
+			switch(t) {
+				case TNode(_), TBraceClose:
+					token = t; // next
+					break;
+				case TColon:
+					// next prop
+				case TBraceOpen:
+					childs = parseNodes();
+					except(TBraceClose);
+					break;
+				default:
+					unexpected(t);
 			}
 		}
-		if( childs == null ) childs = [];
-		return { name : name, props : props, childs : childs };
+		if (childs == null) childs = [];
+		return { name: name, props: props, childs: childs };
 	}
 
-	function except( except : Token ) {
+	function except(except: Token) {
 		var t = next();
-		if( !Type.enumEq(t, except) )
+		if (!Type.enumEq(t, except)) {
 			error("Unexpected '" + tokenStr(t) + "' (" + tokenStr(except) + " expected)");
+		}
 	}
 
 	function peek() {
-		if( token == null )
+		if (token == null) {
 			token = nextToken();
+		}
 		return token;
 	}
 
 	function next() {
-		if( token == null )
+		if (token == null) {
 			return nextToken();
+		}
 		var tmp = token;
 		token = null;
 		return tmp;
 	}
 
-	function error( msg : String ) : Dynamic {
+	function error(msg: String): Dynamic {
 		throw msg + " (line " + line + ")";
 		return null;
 	}
 
-	function unexpected( t : Token ) : Dynamic {
-		return error("Unexpected "+tokenStr(t));
+	function unexpected(t: Token): Dynamic {
+		return error("Unexpected " + tokenStr(t));
 	}
 
-	function tokenStr( t : Token ) {
-		return switch( t ) {
-		case TEof: "<eof>";
-		case TBraceOpen: '{';
-		case TBraceClose: '}';
-		case TIdent(i): i;
-		case TNode(i): i+":";
-		case TFloat(f): f;
-		case TInt(i): i;
-		case TString(s): '"' + s + '"';
-		case TColon: ',';
-		case TLength(l): '*' + l;
+	function tokenStr(t: Token) {
+		return switch(t) {
+			case TEof: "<eof>";
+			case TBraceOpen: '{';
+			case TBraceClose: '}';
+			case TIdent(i): i;
+			case TNode(i): i+":";
+			case TFloat(f): f;
+			case TInt(i): i;
+			case TString(s): '"' + s + '"';
+			case TColon: ',';
+			case TLength(l): '*' + l;
 		};
 	}
 
@@ -351,7 +349,7 @@ class Parser {
 		return StringTools.fastCodeAt(buf, pos++);
 	}
 
-	inline function getBuf( pos : Int, len : Int ) {
+	inline function getBuf(pos: Int, len: Int) {
 		return buf.substr(pos, len);
 	}
 
@@ -362,111 +360,114 @@ class Parser {
 	@:noDebug
 	function nextToken() {
 		var start = pos;
-		while( true ) {
+		while (true) {
 			var c = nextChar();
-			switch( c ) {
-			case ' '.code, '\r'.code, '\t'.code:
-				start++;
-			case '\n'.code:
-				line++;
-				start++;
-			case ';'.code:
-				while( true ) {
-					var c = nextChar();
-					if( StringTools.isEof(c) || c == '\n'.code ) {
-						pos--;
-						break;
-					}
-				}
-				start = pos;
-			case ','.code:
-				return TColon;
-			case '{'.code:
-				return TBraceOpen;
-			case '}'.code:
-				return TBraceClose;
-			case '"'.code:
-				start = pos;
-				while( true ) {
-					c = nextChar();
-					if( c == '"'.code )
-						break;
-					if( StringTools.isEof(c) || c == '\n'.code )
-						error("Unclosed string");
-				}
-				return TString(getBuf(start, pos - start - 1));
-			case '*'.code:
-				start = pos;
-				do {
-					c = nextChar();
-				} while( c >= '0'.code && c <= '9'.code );
-				pos--;
-				return TLength(Std.parseInt(getBuf(start, pos - start)));
-			default:
-				if( (c >= 'a'.code && c <= 'z'.code) || (c >= 'A'.code && c <= 'Z'.code) || c == '_'.code ) {
-					do {
-						c = nextChar();
-					} while( isIdentChar(c) );
-					if( c == ':'.code )
-						return TNode(getBuf(start, pos - start - 1));
-					pos--;
-					return TIdent(getBuf(start, pos - start));
-				}
-				if( (c >= '0'.code && c <= '9'.code) || c == '-'.code ) {
-					do {
-						c = nextChar();
-					} while( c >= '0'.code && c <= '9'.code );
-					if( c != '.'.code && c != 'E'.code && c != 'e'.code && pos - start < 10 ) {
-						pos--;
-						return TInt(getBuf(start, pos - start));
-					}
-					if( c == '.'.code ) {
-						do {
-							c = nextChar();
-						} while( c >= '0'.code && c <= '9'.code );
-					}
-					if( c == 'e'.code || c == 'E'.code ) {
-						c = nextChar();
-						if( c != '-'.code && c != '+'.code )
+			switch(c) {
+				case ' '.code, '\r'.code, '\t'.code:
+					start++;
+				case '\n'.code:
+					line++;
+					start++;
+				case ';'.code:
+					while (true) {
+						var c = nextChar();
+						if (StringTools.isEof(c) || c == '\n'.code) {
 							pos--;
+							break;
+						}
+					}
+					start = pos;
+				case ','.code:
+					return TColon;
+				case '{'.code:
+					return TBraceOpen;
+				case '}'.code:
+					return TBraceClose;
+				case '"'.code:
+					start = pos;
+					while (true) {
+						c = nextChar();
+						if (c == '"'.code) {
+							break;
+						}
+						if (StringTools.isEof(c) || c == '\n'.code) {
+							error("Unclosed string");
+						}
+					}
+					return TString(getBuf(start, pos - start - 1));
+				case '*'.code:
+					start = pos;
+					do {
+						c = nextChar();
+					} while (c >= '0'.code && c <= '9'.code);
+					pos--;
+					return TLength(Std.parseInt(getBuf(start, pos - start)));
+				default:
+					if((c >= 'a'.code && c <= 'z'.code) || (c >= 'A'.code && c <= 'Z'.code) || c == '_'.code) {
 						do {
 							c = nextChar();
-						} while( c >= '0'.code && c <= '9'.code );
+						} while (isIdentChar(c));
+						if (c == ':'.code) {
+							return TNode(getBuf(start, pos - start - 1));
+						}
+						pos--;
+						return TIdent(getBuf(start, pos - start));
 					}
-					pos--;
-					return TFloat(getBuf(start, pos - start));
-				}
-				if( StringTools.isEof(c) ) {
-					pos--;
-					return TEof;
-				}
-				error("Unexpected char '" + String.fromCharCode(c) + "'");
+					if ((c >= '0'.code && c <= '9'.code) || c == '-'.code) {
+						do {
+							c = nextChar();
+						} while (c >= '0'.code && c <= '9'.code);
+						if (c != '.'.code && c != 'E'.code && c != 'e'.code && pos - start < 10) {
+							pos--;
+							return TInt(getBuf(start, pos - start));
+						}
+						if (c == '.'.code) {
+							do {
+								c = nextChar();
+							} while (c >= '0'.code && c <= '9'.code);
+						}
+						if (c == 'e'.code || c == 'E'.code) {
+							c = nextChar();
+							if (c != '-'.code && c != '+'.code)
+								pos--;
+							do {
+								c = nextChar();
+							} while (c >= '0'.code && c <= '9'.code);
+						}
+						pos--;
+						return TFloat(getBuf(start, pos - start));
+					}
+					if (StringTools.isEof(c)) {
+						pos--;
+						return TEof;
+					}
+					error("Unexpected char '" + String.fromCharCode(c) + "'");
 			}
 		}
 	}
 
-	public static function parse( text : String ) {
+	public static function parse(text: String) {
 		return new Parser().parseText(text);
 	}
 }
 
 class FbxLibrary {
 
-	var root : FbxNode;
-	var ids : Map<Int,FbxNode>;
-	var connect : Map<Int,Array<Int>>;
-	var namedConnect : Map<Int,Map<String,Int>>;
-	var invConnect : Map<Int,Array<Int>>;
-	// var uvAnims : Map<String, Array<{ t : Float, u : Float, v : Float }>>;
-	// var animationEvents : Array<{ frame : Int, data : String }>;
+	var root: FbxNode;
+	var ids: Map<Int,FbxNode>;
+	var connect: Map<Int,Array<Int>>;
+	var namedConnect: Map<Int,Map<String,Int>>;
+	var invConnect: Map<Int,Array<Int>>;
+	// var uvAnims: Map<String, Array<{ t : Float, u : Float, v : Float }>>;
+	// var animationEvents: Array<{ frame : Int, data : String }>;
 
 	/**
 		The FBX version that was decoded
 	**/
-	public var version : Float = 0.;
+	public var version: Float = 0.;
 
 	public function new() {
-		root = { name : "Root", props : [], childs : [] };
+		root = { name: "Root", props: [], childs: [] };
 		reset();
 	}
 
@@ -477,16 +478,18 @@ class FbxLibrary {
 		invConnect = new Map();
 	}
 
-	public function load( root : FbxNode ) {
+	public function load(root: FbxNode) {
 		reset();
 		this.root = root;
 
 		version = FbxTools.toInt(FbxTools.get(root, "FBXHeaderExtension.FBXVersion").props[0]) / 1000;
-		if( Std.int(version) != 7 )
+		if (Std.int(version) != 7) {
 			throw "FBX Version 7.x required : use FBX 2010 export";
+		}
 
-		for( c in root.childs )
+		for (c in root.childs) {
 			init(c);
+		}
 
 		// init properties
 		// for( m in FbxTools.getAll(this.root, "Objects.Model") ) {
@@ -515,65 +518,70 @@ class FbxLibrary {
 		// }
 	}
 
-	function init( n : FbxNode ) {
-		switch( n.name ) {
-		case "Connections":
-			for( c in n.childs ) {
-				if( c.name != "C" )
-					continue;
-				var child = FbxTools.toInt(c.props[1]);
-				var parent = FbxTools.toInt(c.props[2]);
-
-				// Maya exports invalid references
-				if( ids.get(child) == null || ids.get(parent) == null ) continue;
-
-				var name = c.props[3];
-
-				if( name != null ) {
-					var name = FbxTools.toString(name);
-					var nc = namedConnect.get(parent);
-					if( nc == null ) {
-						nc = new Map();
-						namedConnect.set(parent, nc);
+	function init(n: FbxNode) {
+		switch (n.name) {
+			case "Connections":
+				for (c in n.childs) {
+					if (c.name != "C") {
+						continue;
 					}
-					nc.set(name, child);
-					// don't register as a parent, since the target can also be the child of something else
-					if( name == "LookAtProperty" ) continue;
-				}
+					var child = FbxTools.toInt(c.props[1]);
+					var parent = FbxTools.toInt(c.props[2]);
 
-				var c = connect.get(parent);
-				if( c == null ) {
-					c = [];
-					connect.set(parent, c);
-				}
-				c.push(child);
+					// Maya exports invalid references
+					if (ids.get(child) == null || ids.get(parent) == null) continue;
 
-				if( parent == 0 )
-					continue;
+					var name = c.props[3];
 
-				var c = invConnect.get(child);
-				if( c == null ) {
-					c = [];
-					invConnect.set(child, c);
+					if (name != null) {
+						var name = FbxTools.toString(name);
+						var nc = namedConnect.get(parent);
+						if (nc == null) {
+							nc = new Map();
+							namedConnect.set(parent, nc);
+						}
+						nc.set(name, child);
+						// don't register as a parent, since the target can also be the child of something else
+						if (name == "LookAtProperty") continue;
+					}
+
+					var c = connect.get(parent);
+					if (c == null) {
+						c = [];
+						connect.set(parent, c);
+					}
+					c.push(child);
+
+					if (parent == 0) {
+						continue;
+					}
+
+					var c = invConnect.get(child);
+					if (c == null) {
+						c = [];
+						invConnect.set(child, c);
+					}
+					c.push(parent);
 				}
-				c.push(parent);
-			}
-		case "Objects":
-			for( c in n.childs )
-				ids.set(FbxTools.getId(c), c);
-		default:
+			case "Objects":
+				for (c in n.childs) {
+					ids.set(FbxTools.getId(c), c);
+				}
+			default:
 		}
 	}
 
-	public function getGeometry( name : String = "" ) {
+	public function getGeometry(name: String = "") {
 		var geom = null;
-		for( g in FbxTools.getAll(root, "Objects.Geometry") )
-			if( FbxTools.hasProp(g, PString("Geometry::" + name)) ) {
+		for (g in FbxTools.getAll(root, "Objects.Geometry")) {
+			if (FbxTools.hasProp(g, PString("Geometry::" + name))) {
 				geom = g;
 				break;
 			}
-		if( geom == null )
+		}
+		if (geom == null) {
 			throw "Geometry " + name + " not found";
+		}
 		return new Geometry(this, geom);
 	}
 
@@ -584,7 +592,7 @@ class FbxLibrary {
 
 	public function getAllGeometries() {
 		var geoms = FbxTools.getAll(root, "Objects.Geometry");
-		var res:Array<Geometry> = [];
+		var res: Array<Geometry> = [];
 		for (g in geoms) res.push(new Geometry(this, g));
 		return res;
 	}
@@ -592,8 +600,8 @@ class FbxLibrary {
 
 class Geometry {
 
-	var lib : FbxLibrary;
-	var root : FbxNode;
+	var lib: FbxLibrary;
+	var root: FbxNode;
 
 	public function new(l, root) {
 		this.lib = l;
@@ -620,14 +628,15 @@ class Geometry {
 		var count = 0, pos = 0;
 		var index = getPolygons();
 		var vout = [], iout = [];
-		for( i in index ) {
+		for (i in index) {
 			count++;
-			if( i < 0 ) {
+			if (i < 0) {
 				index[pos] = -i - 1;
 				var start = pos - count + 1;
-				for( n in 0...count )
+				for (n in 0...count) {
 					vout.push(index[n + start]);
-				for( n in 0...count - 2 ) {
+				}
+				for (n in 0...count - 2) {
 					iout.push(start + n);
 					iout.push(start + count - 1);
 					iout.push(start + n + 1);
@@ -637,28 +646,28 @@ class Geometry {
 			}
 			pos++;
 		}
-		return { vidx : vout, idx : iout };
+		return { vidx: vout, idx: iout };
 	}
 
 	public function getNormals() {
 		return processVectors("LayerElementNormal", "Normals");
 	}
 
-	public function getTangents( opt = false ) {
+	public function getTangents(opt = false) {
 		return processVectors("LayerElementTangent", "Tangents", opt);
 	}
 
-	function processVectors( layer, name, opt = false ) {
+	function processVectors(layer, name, opt = false) {
 		var vect = FbxTools.get(root, layer + "." + name, opt);
-		if( vect == null ) return null;
+		if (vect == null) return null;
 		var nrm = FbxTools.getFloats(vect);
 		// if by-vertice (Maya in some cases, unless maybe "Split per-Vertex Normals" is checked)
 		// let's reindex based on polygon indexes
-		if( FbxTools.toString(FbxTools.get(root, layer+".MappingInformationType").props[0]) == "ByVertice" ) {
+		if (FbxTools.toString(FbxTools.get(root, layer+".MappingInformationType").props[0]) == "ByVertice") {
 			var nout = [];
-			for( i in getPolygons() ) {
+			for (i in getPolygons()) {
 				var vid = i;
-				if( vid < 0 ) vid = -vid - 1;
+				if (vid < 0) vid = -vid - 1;
 				nout.push(nrm[vid * 3]);
 				nout.push(nrm[vid * 3 + 1]);
 				nout.push(nrm[vid * 3 + 2]);
@@ -670,24 +679,25 @@ class Geometry {
 
 	public function getColors() {
 		var color = FbxTools.get(root, "LayerElementColor",true);
-		return color == null ? null : { values : FbxTools.getFloats(FbxTools.get(color, "Colors")), index : FbxTools.getInts(FbxTools.get(color, "ColorIndex")) };
+		return color == null ? null : { values: FbxTools.getFloats(FbxTools.get(color, "Colors")), index: FbxTools.getInts(FbxTools.get(color, "ColorIndex")) };
 	}
 
 	public function getUVs() {
 		var uvs = [];
-		for( v in FbxTools.getAll(root, "LayerElementUV") ) {
+		for (v in FbxTools.getAll(root, "LayerElementUV")) {
 			var index = FbxTools.get(v, "UVIndex", true);
 			var values = FbxTools.getFloats(FbxTools.get(v, "UV"));
-			var index = if( index == null ) {
+			var index = if (index == null) {
 				// ByVertice/Direct (Maya sometimes...)
-				[for( i in getPolygons() ) if( i < 0 ) -i - 1 else i];
-			} else FbxTools.getInts(index);
-			uvs.push({ values : values, index : index });
+				[for (i in getPolygons()) if (i < 0) -i - 1 else i];
+			}
+			else FbxTools.getInts(index);
+			uvs.push({ values: values, index: index });
 		}
 		return uvs;
 	}
 
-	public function getBuffers(binary:Bool, p:FbxParser) {
+	public function getBuffers(binary: Bool, p: FbxParser) {
 		// triangulize indexes :
 		// format is  A,B,...,-X : negative values mark the end of the polygon
 		var pbuf = getVertices();

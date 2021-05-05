@@ -41,8 +41,12 @@ class FbxParser {
 
 		var fbx = binary ? FbxBinaryParser.parse(blob) : Parser.parse(blob.toString());
 		var lib = new FbxLibrary();
-		try { lib.load(fbx); }
-		catch (e: Dynamic) { trace(e); }
+		try {
+			lib.load(fbx);
+		}
+		catch (e: Dynamic) {
+			trace(e);
+		}
 
 		geoms = lib.getAllGeometries();
 		next();

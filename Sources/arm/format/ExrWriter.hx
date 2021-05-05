@@ -284,7 +284,7 @@ class ExrWriter {
 		function writeBGR(off: Int) {
 			writeLine(pos + byteSize * 2);
 			writeLine(pos + byteSize);
-			writeLine(pos    );
+			writeLine(pos);
 		}
 
 		function writeSingle(off: Int) {

@@ -487,8 +487,7 @@ class ObjParser {
 			if (c == "\n".code || c == "\r".code || c == " ".code) break;
 			pos++;
 		}
-		
-		return bytes.getString(begin,pos-begin);
+		return bytes.getString(begin, pos - begin);
 	}
 
 	function nextLine() {

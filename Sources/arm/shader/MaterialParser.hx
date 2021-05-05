@@ -154,8 +154,13 @@ class MaterialParser {
 		var vert = con.vert;
 		var frag = con.frag;
 
-		if (frag.dotNV) { frag.vVec = true; frag.n = true; }
-		if (frag.vVec) vert.wposition = true;
+		if (frag.dotNV) {
+			frag.vVec = true;
+			frag.n = true;
+		}
+		if (frag.vVec) {
+			vert.wposition = true;
+		}
 
 		if (frag.bposition) {
 			if (triplanar) {
@@ -1270,7 +1275,7 @@ class MaterialParser {
 			var tex_name = node_name(node);
 			var tex = make_texture(node, tex_name);
 			if (tex != null) {
-				var color_space = node.buttons[1].default_value; 
+				var color_space = node.buttons[1].default_value;
 				var invert_color = node.buttons[2].default_value == true;
 				var texstore = texture_store(node, tex, tex_name, color_space, invert_color);
 				return '$texstore.a';

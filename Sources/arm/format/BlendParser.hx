@@ -76,7 +76,7 @@ class BlendParser {
 	}
 
 	public static function getTypeIndex(dna: Dna, type: String): Int {
-		for (i in 0...dna.types.length) if (type == dna.types[i]) { return i; }
+		for (i in 0...dna.types.length) if (type == dna.types[i]) return i;
 		return -1;
 	}
 
@@ -353,7 +353,10 @@ class Handle {
 				// Cast void* to type
 				if (asType != null) {
 					for (i in 0...dna.types.length) {
-						if (dna.types[i] == asType) { typeIndex = i; break; }
+						if (dna.types[i] == asType) {
+							typeIndex = i;
+							break;
+						}
 					}
 				}
 				// Raw type
@@ -363,18 +366,18 @@ class Handle {
 					var isArray = dnaName.charAt(dnaName.length - 1) == "]";
 					var len = isArray ? (arrayLen > 0 ? arrayLen : getArrayLen(dnaName)) : 1;
 					switch (type) {
-					case "int": return isArray ? blend.read32array(len) : blend.read32();
-					case "char": return isArray ? blend.readString() : blend.read8();
-					case "uchar": return isArray ? blend.read8array(len) : blend.read8();
-					case "short": return isArray ? blend.read16array(len) : blend.read16();
-					case "ushort": return isArray ? blend.read16array(len) : blend.read16();
-					case "float": return isArray ? blend.readf32array(len) : blend.readf32();
-					case "double": return 0; //blend.readf64();
-					case "long": return isArray ? blend.read32array(len) : blend.read32();
-					case "ulong": return isArray ? blend.read32array(len) : blend.read32();
-					case "int64_t": return blend.read64();
-					case "uint64_t": return blend.read64();
-					case "void": return 0;
+						case "int": return isArray ? blend.read32array(len) : blend.read32();
+						case "char": return isArray ? blend.readString() : blend.read8();
+						case "uchar": return isArray ? blend.read8array(len) : blend.read8();
+						case "short": return isArray ? blend.read16array(len) : blend.read16();
+						case "ushort": return isArray ? blend.read16array(len) : blend.read16();
+						case "float": return isArray ? blend.readf32array(len) : blend.readf32();
+						case "double": return 0; //blend.readf64();
+						case "long": return isArray ? blend.read32array(len) : blend.read32();
+						case "ulong": return isArray ? blend.read32array(len) : blend.read32();
+						case "int64_t": return blend.read64();
+						case "uint64_t": return blend.read64();
+						case "void": return 0;
 					}
 				}
 				// Structure

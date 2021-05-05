@@ -20,9 +20,9 @@ class FbxBinaryParser {
 		var version = read32();
 		is64 = version >= 7500;
 		root = {
-			name : "Root",
-			props : [PInt(0), PString("Root"), PString("Root")],
-			childs : parseNodes()
+			name: "Root",
+			props: [PInt(0), PString("Root"), PString("Root")],
+			childs: parseNodes()
 		};
 	}
 
@@ -64,36 +64,36 @@ class FbxBinaryParser {
 
 	function parseProp(): FbxProp {
 		switch (readChar()) {
-		case "C":
-			return PString(readChar());
-		case "Y":
-			return PInt(read16());
-		case "I":
-			return PInt(read32());
-		case "L":
-			return PInt(read64());
-		case "F":
-			return PFloat(readf32());
-		case "D":
-			return PFloat(readf64());
-		case "f":
-			return parseArray(readf32, true);
-		case "d":
-			return parseArray(readf64, true);
-		case "l":
-			return parseArray(read64);
-		case "i":
-			return parseArray(read32);
-		case "b":
-			return parseArray(readBool);
-		case "S":
-			var len = read32();
-			return PString(readChars(len));
-		case "R":
-			var b = readBytes(read32());
-			return null;
-		default:
-			return null;
+			case "C":
+				return PString(readChar());
+			case "Y":
+				return PInt(read16());
+			case "I":
+				return PInt(read32());
+			case "L":
+				return PInt(read64());
+			case "F":
+				return PFloat(readf32());
+			case "D":
+				return PFloat(readf64());
+			case "f":
+				return parseArray(readf32, true);
+			case "d":
+				return parseArray(readf64, true);
+			case "l":
+				return parseArray(read64);
+			case "i":
+				return parseArray(read32);
+			case "b":
+				return parseArray(readBool);
+			case "S":
+				var len = read32();
+				return PString(readChars(len));
+			case "R":
+				var b = readBytes(read32());
+				return null;
+			default:
+				return null;
 		}
 	}
 

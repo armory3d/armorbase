@@ -9,7 +9,9 @@ import arm.Project;
 class NodesMaterial {
 
 	// Mark strings as localizable
-	public static inline function _tr(s: String) { return s; }
+	public static inline function _tr(s: String) {
+		return s;
+	}
 
 	public static var categories = [_tr("Input"), _tr("Texture"), _tr("Color"), _tr("Vector"), _tr("Converter"), _tr("Group")];
 
@@ -2678,7 +2680,7 @@ class NodesMaterial {
 			val.push(f32);
 		}
 		if (ui.button("-")) {
-			if (val.length > 2) { val.pop(); }
+			if (val.length > 2) val.pop();
 		}
 		var i = Std.int(ui.slider(nhandle.nest(0).nest(2).nest(axis, {position: 0}), "Index", 0, num - 1, false, 1, true, Left));
 		ui.row([1 / 2, 1 / 2]);
@@ -2711,7 +2713,11 @@ class NodesMaterial {
 		if (ui.button("+")) {
 			var last = vals[vals.length - 1];
 			var f32 = new kha.arrays.Float32Array(5);
-			f32[0] = last[0]; f32[1] = last[1]; f32[2] = last[2]; f32[3] = last[3]; f32[4] = 1.0;
+			f32[0] = last[0];
+			f32[1] = last[1];
+			f32[2] = last[2];
+			f32[3] = last[3];
+			f32[4] = 1.0;
 			vals.push(f32);
 			ihandle.value += 1;
 		}
@@ -2744,7 +2750,12 @@ class NodesMaterial {
 			for (i in 1...999) {
 				node.name = tr("Group") + " " + i;
 				var found = false;
-				for (g in Project.materialGroups) if (g.canvas.name == node.name) { found = true; break; }
+				for (g in Project.materialGroups) {
+					if (g.canvas.name == node.name) {
+						found = true;
+						break;
+					}
+				}
 				if (!found) break;
 			}
 			var canvas: TNodeCanvas = {
@@ -2791,7 +2802,12 @@ class NodesMaterial {
 		}
 
 		var group: TNodeGroup = null;
-		for (g in Project.materialGroups) if (g.canvas.name == node.name) { group = g; break; }
+		for (g in Project.materialGroups) {
+			if (g.canvas.name == node.name) {
+				group = g;
+				break;
+			}
+		}
 
 		if (ui.button(tr("Nodes"))) {
 			arm.ui.UINodes.inst.groupStack.push(group);

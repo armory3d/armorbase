@@ -63,10 +63,10 @@ class JpgWriter {
 			72, 92, 95, 98,112,100,103, 99
 		];
 		for (i in 0...64) {
-			var t: Int = Math.floor( (YQT[i] * sf + 50) / 100 );
-			if( t < 1 ) t = 1;
-			else if( t > 255 ) t = 255;
-			YTable[ ZigZag[i] ] = t;
+			var t: Int = Math.floor((YQT[i] * sf + 50) / 100);
+			if (t < 1) t = 1;
+			else if (t > 255) t = 255;
+			YTable[ZigZag[i]] = t;
 		}
 		var UVQT: Array<Int> = [
 			17, 18, 24, 47, 99, 99, 99, 99,
@@ -78,19 +78,19 @@ class JpgWriter {
 			99, 99, 99, 99, 99, 99, 99, 99,
 			99, 99, 99, 99, 99, 99, 99, 99
 		];
-		for( j in 0...64 ) {
-			var u: Int = Math.floor( (UVQT[j] * sf + 50) / 100 );
-			if( u < 1 ) u = 1;
-			else if( u > 255 ) u = 255;
-			UVTable[ ZigZag[j] ] = u;
+		for (j in 0...64) {
+			var u: Int = Math.floor((UVQT[j] * sf + 50) / 100);
+			if (u < 1) u = 1;
+			else if (u > 255) u = 255;
+			UVTable[ZigZag[j]] = u;
 		}
 		var aasf: Array<Float> = [
 			1.0, 1.387039845, 1.306562965, 1.175875602,
 			1.0, 0.785694958, 0.541196100, 0.275899379
 		];
 		var k = 0;
-		for( row in 0...8 ) {
-			for( col in 0...8 ) {
+		for (row in 0...8) {
+			for (col in 0...8) {
 				fdtbl_Y[k]  = (1.0 / (YTable [ZigZag[k]] * aasf[row] * aasf[col] * 8.0));
 				fdtbl_UV[k] = (1.0 / (UVTable[ZigZag[k]] * aasf[row] * aasf[col] * 8.0));
 				k++;
@@ -105,7 +105,7 @@ class JpgWriter {
 
 	function initLuminance() {
 		std_dc_luminance_nrcodes = [0,0,1,5,1,1,1,1,1,1,0,0,0,0,0,0,0];
-		std_dc_luminance_values = strIntsToBytes( '0,1,2,3,4,5,6,7,8,9,10,11' );
+		std_dc_luminance_values = strIntsToBytes('0,1,2,3,4,5,6,7,8,9,10,11');
 		std_ac_luminance_nrcodes = [0,0,2,1,3,3,2,4,3,5,5,4,4,0,0,1,0x7d];
 		std_ac_luminance_values = strIntsToBytes(
 			'0x01,0x02,0x03,0x00,0x04,0x11,0x05,0x12,' +
@@ -132,21 +132,21 @@ class JpgWriter {
 		);
 	}
 
-	function strIntsToBytes( s: String ) {
+	function strIntsToBytes(s: String) {
 		var len = s.length;
 		var b = new haxe.io.BytesBuffer();
 		var val = 0;
 		var i = 0;
-		for( j in 0...len ) {
-			if( s.charAt( j ) == ',' ) {
-				val = Std.parseInt( s.substr(i, j - i) );
-				b.addByte( val );
+		for (j in 0...len) {
+			if (s.charAt(j) == ',') {
+				val = Std.parseInt(s.substr(i, j - i));
+				b.addByte(val);
 				i = j + 1;
 			}
 		}
-		if( i < len ) {
-			val = Std.parseInt( s.substr(i) );
-			b.addByte( val );
+		if (i < len) {
+			val = Std.parseInt(s.substr(i));
+			b.addByte(val);
 		}
 		return b.getBytes();
 	}
@@ -158,7 +158,7 @@ class JpgWriter {
 
 	function initChrominance() {
 		std_dc_chrominance_nrcodes = [0,0,3,1,1,1,1,1,1,1,1,1,0,0,0,0,0];
-		std_dc_chrominance_values = strIntsToBytes( '0,1,2,3,4,5,6,7,8,9,10,11' );
+		std_dc_chrominance_values = strIntsToBytes('0,1,2,3,4,5,6,7,8,9,10,11');
 		std_ac_chrominance_nrcodes = [0,0,2,1,2,4,4,3,4,7,5,4,4,0,1,2,0x77];
 		std_ac_chrominance_values = strIntsToBytes(
 			'0x00,0x01,0x02,0x03,0x11,0x04,0x05,0x21,' +
@@ -201,11 +201,11 @@ class JpgWriter {
 		var codevalue = 0;
 		var pos_in_table = 0;
 		var HT: Map<Int,BitString> = new Map();
-		for( k in 1...17 ) {
+		for (k in 1...17) {
 			var end = nrcodes[k];
-			for( j in 0...end ) {
-				var idx: Int = std_table.get( pos_in_table );
-				HT.set( idx, new BitString( k, codevalue ) );
+			for (j in 0...end) {
+				var idx: Int = std_table.get(pos_in_table);
+				HT.set(idx, new BitString(k, codevalue));
 				pos_in_table++;
 				codevalue++;
 			}
@@ -223,17 +223,17 @@ class JpgWriter {
 		var idx: Int;
 		for (cat in 1...16) {
 			//Positive numbers
-			for( nr in nrlower...nrupper ) {
+			for (nr in nrlower...nrupper) {
 				idx = 32767 + nr;
-				category.set( idx, cat );
-				bitcode.set( idx, new BitString( cat, nr ) );
+				category.set(idx, cat);
+				bitcode.set(idx, new BitString(cat, nr));
 			}
 			//Negative numbers
 			var nrneg: Int = -(nrupper - 1);
-			while( nrneg <= -nrlower ) {
+			while (nrneg <= -nrlower) {
 				idx = 32767 + nrneg;
-				category.set( idx, cat );
-				bitcode.set( idx, new BitString( cat, nrupper - 1 + nrneg ) );
+				category.set(idx, cat);
+				bitcode.set(idx, new BitString(cat, nrupper - 1 + nrneg));
 				nrneg++;
 			}
 			nrlower <<= 1;
@@ -249,16 +249,16 @@ class JpgWriter {
 	function writeBits(bs: BitString) {
 		var value: Int = bs.val;
 		var posval: Int = bs.len - 1;
-		while( posval >= 0 ) {
-			//if (value & uint(1 << posval) ) {
-			if( (value & (1 << posval)) != 0 ) {  //<- CORRECT ?
+		while (posval >= 0) {
+			//if (value & uint(1 << posval)) {
+			if ((value & (1 << posval)) != 0) {  //<- CORRECT ?
 				//bytenew |= uint(1 << bytepos);
 				bytenew |= (1 << bytepos);
 			}
 			posval--;
 			bytepos--;
-			if( bytepos < 0 ) {
-				if( bytenew == 0xFF ) {
+			if (bytepos < 0) {
+				if (bytenew == 0xFF) {
 					b(0xFF);
 					b(0);
 				}
@@ -271,9 +271,9 @@ class JpgWriter {
 		}
 	}
 
-	function writeWord( val: Int ) {
-		b( (val >> 8) & 0xFF );
-		b( val & 0xFF );
+	function writeWord(val: Int) {
+		b((val >> 8) & 0xFF);
+		b(val & 0xFF);
 	}
 
 	// DCT & quantization core
@@ -407,20 +407,22 @@ class JpgWriter {
 		b(0xFF); b(0xDB);  //<- marker 0xFFDB
 		b(0); b(132);   //<- length
 		b(0);
-		for( j in 0...64 )
+		for(j in 0...64) {
 			b(YTable[j]);
+		}
 		b(1);
-		for( j in 0...64 )
+		for(j in 0...64) {
 			b(UVTable[j]);
+		}
 	}
 	function writeSOF0(width: Int, height: Int) {
 		b(0xFF); b(0xC0);  //<- marker 0xFFC0
 		b(0);  b(17);    //<- length, truecolor YUV JPG
 		b(8);  // precision
-		b( (height>>8) & 0xFF );
-		b(  height & 0xFF );
-		b(  (width>>8) & 0xFF );
-		b(  width & 0xFF );
+		b((height>>8) & 0xFF);
+		b(height & 0xFF);
+		b((width>>8) & 0xFF);
+		b(width & 0xFF);
 		b(3);     // nrofcomponents
 		b(1);     // IdY
 		b(0x11);  // HVY
@@ -437,23 +439,27 @@ class JpgWriter {
 		b(0xFF); b(0xC4);  //<- marker 0xFFC4
 		b(0x01); b(0xA2);   //<- length
 		b(0);  // HTYDCinfo
-		for( j in 1...17 )
+		for (j in 1...17) {
 			b(std_dc_luminance_nrcodes[j]);
+		}
 		byteout.write(std_dc_luminance_values);
 
 		b(0x10);  // HTYACinfo
-		for( j in 1...17 )
+		for (j in 1...17) {
 			b(std_ac_luminance_nrcodes[j]);
+		}
 		byteout.write(std_ac_luminance_values);
 
 		b(1);  // HTUDCinfo
-		for( j in 1...17 )
+		for (j in 1...17) {
 			b(std_dc_chrominance_nrcodes[j]);
+		}
 		byteout.write(std_dc_chrominance_values);
 
 		b(0x11);  // HTUACinfo
-		for( j in 1...17 )
+		for (j in 1...17) {
 			b(std_ac_chrominance_nrcodes[j]);
+		}
 		byteout.write(std_ac_chrominance_values);
 	}
 
@@ -476,54 +482,55 @@ class JpgWriter {
 	var DU: Array<Float>;  //<- initialized in function new JPEGEncoder()
 
 	function processDU(CDU: Array<Float>, fdtbl: Array<Float>, DC: Float, HTDC: Map<Int,BitString>, HTAC: Map<Int,BitString>): Float {
-		var EOB: BitString = HTAC.get( 0x00 );
-		var M16zeroes: BitString = HTAC.get( 0xF0 );
+		var EOB: BitString = HTAC.get(0x00);
+		var M16zeroes: BitString = HTAC.get(0xF0);
 
 		var DU_DCT: Array<Float> = fDCTQuant(CDU, fdtbl);
 		//ZigZag reorder
 		for (i in 0...64) {
-			DU[ ZigZag[i] ] = DU_DCT[i];
+			DU[ZigZag[i]] = DU_DCT[i];
 		}
 		var idx: Int;
-		var Diff = Std.int( DU[0] - DC );
+		var Diff = Std.int(DU[0] - DC);
 		DC = DU[0];
 		//Encode DC
-		if( Diff == 0 ) {
-			writeBits( HTDC.get(0) ); // Diff might be 0
-		} else {
+		if (Diff == 0) {
+			writeBits(HTDC.get(0)); // Diff might be 0
+		}
+		else {
 			idx = 32767 + Diff;
-			writeBits(HTDC.get( category.get( idx ) ));
-			writeBits( bitcode.get( idx ) );
+			writeBits(HTDC.get(category.get(idx)));
+			writeBits(bitcode.get(idx));
 		}
 
 		//Encode ACs
 		var end0pos = 63;
 		//for (; (end0pos>0)&&(DU[end0pos]==0); end0pos--) {  };
-		while( (end0pos > 0) && ( DU[end0pos] == 0.0 ) ) end0pos--;
+		while ((end0pos > 0) && (DU[end0pos] == 0.0)) end0pos--;
 
 		//end0pos = first element in reverse order !=0
-		if ( end0pos == 0 ) {
+		if (end0pos == 0) {
 			writeBits(EOB);
 			return DC;
 		}
 		var i = 1;
-		while ( i <= end0pos ) {
+		while (i <= end0pos) {
 			var startpos = i;
 			//for (; (DU[i]==0) && (i<=end0pos); i++) {  };  <- it's a 'while' loop
-			while( ( DU[i] == 0.0 ) && ( i <= end0pos ) ) i++;
+			while ((DU[i] == 0.0) && (i <= end0pos)) i++;
 
 			var nrzeroes: Int = i - startpos;
-			if ( nrzeroes >= 16 ) {
+			if (nrzeroes >= 16) {
 				//for (var nrmarker: Int=1; nrmarker <= nrzeroes/16; nrmarker++) {
-				for( nrmarker in 0...(nrzeroes >> 4) ) writeBits(M16zeroes);
+				for (nrmarker in 0...(nrzeroes >> 4)) writeBits(M16zeroes);
 				nrzeroes &= 0xF;
 			}
-			idx = 32767 + Std.int( DU[i] );  //<- line added
-			writeBits( HTAC.get( nrzeroes * 16 + category.get( idx ) ) );
-			writeBits( bitcode.get( idx ) );
+			idx = 32767 + Std.int(DU[i]);  //<- line added
+			writeBits(HTAC.get(nrzeroes * 16 + category.get(idx)));
+			writeBits(bitcode.get(idx));
 			i++;
 		}
-		if( end0pos != 63 ) writeBits(EOB);
+		if (end0pos != 63) writeBits(EOB);
 		return DC;
 	}
 
@@ -531,11 +538,11 @@ class JpgWriter {
 	var UDU: Array<Float>;
 	var VDU: Array<Float>;
 
-	function ARGB2YUV(img: haxe.io.Bytes, width : Int, xpos: Int, ypos: Int) {
+	function ARGB2YUV(img: haxe.io.Bytes, width: Int, xpos: Int, ypos: Int) {
 		var pos = 0;
-		for( y in 0...8 ) {
+		for (y in 0...8) {
 			var offset = ((y + ypos) * width + xpos) << 2;
-			for( x in 0...8 ) {
+			for (x in 0...8) {
 				offset++; // skip alpha
 				var R = img.get(offset++);
 				var G = img.get(offset++);
@@ -548,7 +555,7 @@ class JpgWriter {
 		}
 	}
 
-	public function new( out : haxe.io.Output ) {
+	public function new(out: haxe.io.Output) {
 	//begin : lines added to initialize variables
 		YTable = new Array<Int>();
 		UVTable = new Array<Int>();
@@ -580,21 +587,21 @@ class JpgWriter {
 		initZigZag();
 		initLuminance();
 		initChrominance();
-	//end : lines added to initialize variables
+		//end : lines added to initialize variables
 
 		// Create tables
 		initHuffmanTbl();
 		initCategoryNumber();
 	}
 
-	public function write( image : JpgData, type = 0, off = 0, swapRG = false ) {
+	public function write(image: JpgData, type = 0, off = 0, swapRG = false) {
 		// init quality table
 		var quality = image.quality;
-		if( quality <= 0 ) quality = 1;
-		if( quality > 100 ) quality = 100;
+		if (quality <= 0) quality = 1;
+		if (quality > 100) quality = 100;
 		var sf =
-			if( quality < 50 ) Std.int( 5000 / quality )
-			else Std.int( 200 - quality * 2 );
+			if (quality < 50) Std.int(5000 / quality)
+			else Std.int(200 - quality * 2);
 		initQuantTables(sf);
 
 		// Initialize bit writer
@@ -607,7 +614,7 @@ class JpgWriter {
 		writeWord(0xFFD8); // SOI
 		writeAPP0();
 		writeDQT();
-		writeSOF0( width, height );
+		writeSOF0(width, height);
 		writeDHT();
 		writeSOS();
 
@@ -619,9 +626,9 @@ class JpgWriter {
 		bytepos = 7;
 		var ypos = 0;
 		if (type == 0) {
-			while( ypos < height ) {
+			while (ypos < height) {
 				var xpos = 0;
-				while( xpos < width ) {
+				while (xpos < width) {
 					ARGB2YUV(image.pixels, width, xpos, ypos);
 					DCY = processDU(YDU, fdtbl_Y, DCY, YDC_HT, YAC_HT);
 					DCU = processDU(UDU, fdtbl_UV, DCU, UVDC_HT, UVAC_HT);
@@ -632,9 +639,9 @@ class JpgWriter {
 			}
 		}
 		else if (type == 1 && !swapRG) {
-			while( ypos < height ) {
+			while (ypos < height) {
 				var xpos = 0;
-				while( xpos < width ) {
+				while(xpos < width) {
 					RGBA2YUV(image.pixels, width, xpos, ypos);
 					DCY = processDU(YDU, fdtbl_Y, DCY, YDC_HT, YAC_HT);
 					DCU = processDU(UDU, fdtbl_UV, DCU, UVDC_HT, UVAC_HT);
@@ -645,9 +652,9 @@ class JpgWriter {
 			}
 		}
 		else if (type == 1 && swapRG) {
-			while( ypos < height ) {
+			while (ypos < height) {
 				var xpos = 0;
-				while( xpos < width ) {
+				while (xpos < width) {
 					BGRA2YUV(image.pixels, width, xpos, ypos);
 					DCY = processDU(YDU, fdtbl_Y, DCY, YDC_HT, YAC_HT);
 					DCU = processDU(UDU, fdtbl_UV, DCU, UVDC_HT, UVAC_HT);
@@ -658,9 +665,9 @@ class JpgWriter {
 			}
 		}
 		else if (type == 2) {
-			while( ypos < height ) {
+			while (ypos < height) {
 				var xpos = 0;
-				while( xpos < width ) {
+				while (xpos < width) {
 					RRR2YUV(image.pixels, width, xpos, ypos, off);
 					DCY = processDU(YDU, fdtbl_Y, DCY, YDC_HT, YAC_HT);
 					DCU = processDU(UDU, fdtbl_UV, DCU, UVDC_HT, UVAC_HT);
@@ -672,8 +679,8 @@ class JpgWriter {
 		}
 
 		// Do the bit alignment of the EOI marker
-		if( bytepos >= 0 ) {
-			var fillbits = new BitString( bytepos + 1, ( 1 << (bytepos + 1) ) - 1 );
+		if (bytepos >= 0) {
+			var fillbits = new BitString(bytepos + 1, (1 << (bytepos + 1)) - 1);
 			writeBits(fillbits);
 		}
 
@@ -681,11 +688,11 @@ class JpgWriter {
 	}
 
 	// armory
-	function RGBA2YUV(img: haxe.io.Bytes, width : Int, xpos: Int, ypos: Int) {
+	function RGBA2YUV(img: haxe.io.Bytes, width: Int, xpos: Int, ypos: Int) {
 		var pos = 0;
-		for( y in 0...8 ) {
+		for (y in 0...8) {
 			var offset = ((y + ypos) * width + xpos) << 2;
-			for( x in 0...8 ) {
+			for (x in 0...8) {
 				var R = img.get(offset++);
 				var G = img.get(offset++);
 				var B = img.get(offset++);
@@ -697,11 +704,11 @@ class JpgWriter {
 			}
 		}
 	}
-	function BGRA2YUV(img: haxe.io.Bytes, width : Int, xpos: Int, ypos: Int) {
+	function BGRA2YUV(img: haxe.io.Bytes, width: Int, xpos: Int, ypos: Int) {
 		var pos = 0;
-		for( y in 0...8 ) {
+		for (y in 0...8) {
 			var offset = ((y + ypos) * width + xpos) << 2;
-			for( x in 0...8 ) {
+			for (x in 0...8) {
 				var B = img.get(offset++);
 				var G = img.get(offset++);
 				var R = img.get(offset++);
@@ -713,13 +720,13 @@ class JpgWriter {
 			}
 		}
 	}
-	function RRR2YUV(img: haxe.io.Bytes, width : Int, xpos: Int, ypos: Int, off: Int) {
+	function RRR2YUV(img: haxe.io.Bytes, width: Int, xpos: Int, ypos: Int, off: Int) {
 		var pos = 0;
-		for( y in 0...8 ) {
+		for (y in 0...8) {
 			var offset = ((y + ypos) * width + xpos) << 2;
-			for( x in 0...8 ) {
+			for (x in 0...8) {
 				var R = img.get(offset + off);
-				offset+=4;
+				offset += 4;
 				YDU[pos] = ((( 0.29900) * R + ( 0.58700) * R + ( 0.11400) * R)) -128;
 				UDU[pos] = (((-0.16874) * R + (-0.33126) * R + ( 0.50000) * R));
 				VDU[pos] = ((( 0.50000) * R + (-0.41869) * R + (-0.08131) * R));
