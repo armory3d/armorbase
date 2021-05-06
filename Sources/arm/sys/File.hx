@@ -97,6 +97,8 @@ class File {
 				if (ab != null) Krom.fileSaveBytes(dstPath, ab);
 			});
 		}
+		#elseif krom_linux
+		Krom.sysCommand('wget -O "' + dstPath + '" ' + url);
 		#else
 		Krom.sysCommand('curl -L ' + url + ' -o "' + dstPath + '"');
 		#end
