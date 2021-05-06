@@ -47,9 +47,9 @@ class File {
 
 	public static function createDirectory(path: String) {
 		#if krom_windows
-		Krom.sysCommand("mkdir " + path); // -p by default
+		Krom.sysCommand('mkdir "' + path + '"'); // -p by default
 		#else
-		Krom.sysCommand("mkdir -p " + path);
+		Krom.sysCommand('mkdir -p "' + path + '"');
 		#end
 	}
 
@@ -98,12 +98,12 @@ class File {
 			});
 		}
 		#else
-		Krom.sysCommand("curl -L " + url + " -o " + dstPath);
+		Krom.sysCommand('curl -L ' + url + ' -o "' + dstPath + '"');
 		#end
 	}
 
 	public static function downloadBytes(url: String): Bytes {
-		var save = Path.data() + Path.sep + "download.bin";
+		var save = (Path.isProtected() ? Krom.savePath() : Path.data() + Path.sep) + "download.bin";
 		download(url, save);
 		try {
 			return Bytes.ofData(Krom.loadBlob(save));
@@ -114,24 +114,26 @@ class File {
 	}
 
 	public static function cacheCloud(path: String): String {
-		var dest = Krom.getFilesLocation() + Path.sep + path;
+		var dest = (Path.isProtected() ? Krom.savePath() : Krom.getFilesLocation() + Path.sep) + path;
 		if (!File.exists(dest)) {
 			var fileDir = dest.substr(0, dest.lastIndexOf(Path.sep));
-			File.createDirectory(fileDir);
+			if (File.readDirectory(fileDir)[0] == "") {
+				File.createDirectory(fileDir);
+			}
 			#if krom_windows
 			path = path.replace("\\", "/");
 			#end
 			var url = Config.raw.server + "/" + path;
 			File.download(url, dest, cloudSizes.get(path));
 			if (!File.exists(dest)) {
-				Log.error(Strings.error5());
+				Console.error(Strings.error5());
 				return null;
 			}
 		}
 		#if krom_darwin
 		return dest;
 		#else
-		return Path.workingDir() + Path.sep + path;
+		return (Path.isProtected() ? Krom.savePath() : Path.workingDir() + Path.sep) + path;
 		#end
 	}
 
@@ -141,10 +143,9 @@ class File {
 		var files: Array<String> = [];
 		var sizes: Array<Int> = [];
 		var bytes = File.downloadBytes(Config.raw.server);
-		var dataPath = Path.data().startsWith(Path.workingDir()) ? Path.data() : Path.workingDir() + Path.sep + Path.data();
-		if (!File.exists(dataPath + Path.sep + "download.bin")) {
+		if (bytes == null) {
 			cloud.set("cloud", []);
-			Log.error(Strings.error5());
+			Console.error(Strings.error5());
 			return;
 		}
 		for (e in Xml.parse(bytes.toString()).firstElement().elementsNamed("Contents")) {

@@ -24,6 +24,8 @@ class Path {
 	public static var metallicExt = ["metallic", "metal", "metalness", "m", "met"];
 	public static var displacementExt = ["displacement", "height", "h", "disp"];
 
+	static var workingDirCache: String = null;
+
 	public static function data(): String {
 		return Krom.getFilesLocation() + Path.sep + Data.dataPath;
 	}
@@ -47,14 +49,17 @@ class Path {
 	}
 
 	public static function workingDir(): String {
-		#if krom_windows
-		var cmd = "cd";
-		#else
-		var cmd = "echo $PWD";
-		#end
-		var save = data() + sep + "tmp.txt";
-		Krom.sysCommand(cmd + ' > "' + save + '"');
-		return haxe.io.Bytes.ofData(Krom.loadBlob(save)).toString().rtrim();
+		if (workingDirCache == null) {
+			#if krom_windows
+			var cmd = "cd";
+			#else
+			var cmd = "echo $PWD";
+			#end
+			var save = (Path.isProtected() ? Krom.savePath() : Path.data() + Path.sep) + "working_dir.txt";
+			Krom.sysCommand(cmd + ' > "' + save + '"');
+			workingDirCache = haxe.io.Bytes.ofData(Krom.loadBlob(save)).toString().rtrim();
+		}
+		return workingDirCache;
 	}
 
 	public static function isMesh(path: String): Bool {
