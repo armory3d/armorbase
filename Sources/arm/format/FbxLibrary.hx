@@ -165,7 +165,7 @@ class FbxTools {
 	}
 
 	public static function getType(n: FbxNode) {
-		if(n.props.length != 3) throw n.name + " is not an object";
+		if (n.props.length != 3) throw n.name + " is not an object";
 		return switch(n.props[2]) {
 			case PString(n): n;
 			default: throw n.name + " is not an object";
@@ -403,7 +403,7 @@ class Parser {
 					pos--;
 					return TLength(Std.parseInt(getBuf(start, pos - start)));
 				default:
-					if((c >= 'a'.code && c <= 'z'.code) || (c >= 'A'.code && c <= 'Z'.code) || c == '_'.code) {
+					if ((c >= 'a'.code && c <= 'z'.code) || (c >= 'A'.code && c <= 'Z'.code) || c == '_'.code) {
 						do {
 							c = nextChar();
 						} while (isIdentChar(c));

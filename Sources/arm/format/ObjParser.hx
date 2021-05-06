@@ -349,7 +349,9 @@ class ObjParser {
 				// Split indices per tile
 				udims = [];
 				udimsU = tilesU;
-				for (i in 0...tilesU * tilesV) { udims.push(new kha.arrays.Uint32Array(num[i])); num[i] = 0; }
+				for (i in 0...tilesU * tilesV) {
+					udims.push(new kha.arrays.Uint32Array(num[i])); num[i] = 0;
+				}
 
 				for (i in 0...Std.int(inda.length / 3)) {
 					var i1 = inda[i * 3    ];
@@ -391,7 +393,9 @@ class ObjParser {
 			}
 		}
 		bytes = null;
-		if (!hasNext) { posFirst = norFirst = uvFirst = null; }
+		if (!hasNext) {
+			posFirst = norFirst = uvFirst = null;
+		}
 	}
 
 	function readFaceFast() {
@@ -452,7 +456,10 @@ class ObjParser {
 		var len = bi - 1;
 		for (i in 0...bi - off) {
 			var c = buf[len - i];
-			if (c == ".".code) { dot = dec; continue; }
+			if (c == ".".code) {
+				dot = dec;
+				continue;
+			}
 			res += (c - 48) * dec;
 			dec *= 10;
 		}

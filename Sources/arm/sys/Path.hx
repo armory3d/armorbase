@@ -113,13 +113,27 @@ class Path {
 		return false;
 	}
 
-	public static inline function isBaseColorTex(p: String): Bool { return checkExt(p, baseColorExt); }
-	public static inline function isOpacityTex(p: String): Bool { return checkExt(p, opacityExt); }
-	public static inline function isNormalMapTex(p: String): Bool { return checkExt(p, normalMapExt); }
-	public static inline function isOcclusionTex(p: String): Bool { return checkExt(p, occlusionExt); }
-	public static inline function isRoughnessTex(p: String): Bool { return checkExt(p, roughnessExt); }
-	public static inline function isMetallicTex(p: String): Bool { return checkExt(p, metallicExt); }
-	public static inline function isDisplacementTex(p: String): Bool { return checkExt(p, displacementExt); }
+	public static inline function isBaseColorTex(p: String): Bool {
+		return checkExt(p, baseColorExt);
+	}
+	public static inline function isOpacityTex(p: String): Bool {
+		return checkExt(p, opacityExt);
+	}
+	public static inline function isNormalMapTex(p: String): Bool {
+		return checkExt(p, normalMapExt);
+	}
+	public static inline function isOcclusionTex(p: String): Bool {
+		return checkExt(p, occlusionExt);
+	}
+	public static inline function isRoughnessTex(p: String): Bool {
+		return checkExt(p, roughnessExt);
+	}
+	public static inline function isMetallicTex(p: String): Bool {
+		return checkExt(p, metallicExt);
+	}
+	public static inline function isDisplacementTex(p: String): Bool {
+		return checkExt(p, displacementExt);
+	}
 
 	public static function isFolder(p: String): Bool {
 		return p.indexOf(".") == -1;

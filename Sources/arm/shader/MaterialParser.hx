@@ -1690,10 +1690,10 @@ class MaterialParser {
 			}
 		}
 
-		if (color_space == 1) { //SRGB to linear
+		if (color_space == 1) { // sRGB to linear
 			curshader.write('$tex_store.rgb = pow($tex_store.rgb, vec3(2.2, 2.2, 2.2));');
 		}
-		else if(color_space == 2) { //From DirectX normal map to OpenGl normal map
+		else if (color_space == 2) { // DirectX normal map to OpenGL normal map
 		    curshader.write('$tex_store.y = 1.0 - $tex_store.y;');
 		}
 
