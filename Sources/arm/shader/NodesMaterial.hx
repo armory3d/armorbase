@@ -2016,7 +2016,14 @@ class NodesMaterial {
 						default_value: f32([0.5, 0.5, 1.0])
 					}
 				],
-				buttons: []
+				buttons: [
+					{
+						name: _tr("Invert"),
+						type: "BOOL",
+						default_value: false,
+						output: 0
+					}
+				]
 			},
 			{
 				id: 0,

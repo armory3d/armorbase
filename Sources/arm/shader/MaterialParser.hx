@@ -941,9 +941,13 @@ class MaterialParser {
 		else if (node.type == "NORMAL_MAP") {
 			var strength = parse_value_input(node.inputs[0]);
 			var norm = parse_vector_input(node.inputs[1]);
+			var invert_map = node.buttons[0].default_value == true;
 
 			var store = store_var_name(node);
 			curshader.write('vec3 ${store}_texn = $norm * 2.0 - 1.0;');
+			if (invert_map) {
+				curshader.write('${store}_texn.xy = -1.0 * ${store}_texn.xy;');
+			}
 			curshader.write('${store}_texn.xy = $strength * ${store}_texn.xy;');
 			curshader.write('${store}_texn = normalize(${store}_texn);');
 
