@@ -4,7 +4,7 @@ import iron.data.Data;
 
 class Path {
 
-	#if krom_windows // no inline for plugin access
+	#if krom_windows // No inline for plugin access
 	public static var sep = "\\";
 	#else
 	public static var sep = "/";

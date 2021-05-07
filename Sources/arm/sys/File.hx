@@ -7,11 +7,13 @@ class File {
 	#if krom_windows
 	static inline var cmd_dir = "dir /b";
 	static inline var cmd_dir_nofile = "dir /b /ad";
+	static inline var cmd_mkdir = "mkdir";
 	static inline var cmd_copy = "copy";
 	static inline var cmd_del = "del /f";
 	#else
 	static inline var cmd_dir = "ls";
 	static inline var cmd_dir_nofile = "ls";
+	static inline var cmd_mkdir = "mkdir -p";
 	static inline var cmd_copy = "cp";
 	static inline var cmd_del = "rm";
 	#end
@@ -46,11 +48,7 @@ class File {
 	}
 
 	public static function createDirectory(path: String) {
-		#if krom_windows
-		Krom.sysCommand('mkdir "' + path + '"'); // -p by default
-		#else
-		Krom.sysCommand('mkdir -p "' + path + '"');
-		#end
+		Krom.sysCommand(cmd_mkdir + ' "' + path + '"');
 	}
 
 	public static function copy(srcPath: String, dstPath: String) {
@@ -64,18 +62,6 @@ class File {
 		Krom.sysCommand('xdg-open "' + path + '"');
 		#else
 		Krom.sysCommand('open "' + path + '"');
-		#end
-	}
-
-	public static function explorer(url: String) {
-		#if krom_windows
-		Krom.sysCommand('explorer "' + url + '"');
-		#elseif krom_linux
-		Krom.sysCommand('xdg-open "' + url + '"');
-		#elseif (krom_android || krom_ios)
-		Krom.loadUrl(url);
-		#else
-		Krom.sysCommand('open "' + url + '"');
 		#end
 	}
 

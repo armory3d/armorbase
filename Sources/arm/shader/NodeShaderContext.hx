@@ -7,9 +7,6 @@ import arm.shader.NodeShaderData;
 class NodeShaderContext {
 	public var vert: NodeShader;
 	public var frag: NodeShader;
-	public var geom: NodeShader;
-	public var tesc: NodeShader;
-	public var tese: NodeShader;
 	public var data: TShaderContext;
 	public var allow_vcols = false;
 	var material: TMaterial;
@@ -72,11 +69,7 @@ class NodeShaderContext {
 
 	public function get_elem(name: String): TVertexElement {
 		for (elem in data.vertex_elements) {
-			#if cpp
-			if (Reflect.field(elem, "name") == name)
-			#else
-			if (elem.name == name)
-			#end {
+			if (elem.name == name) {
 				return elem;
 			}
 		}
