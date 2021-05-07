@@ -1837,9 +1837,9 @@ class NodesMaterial {
 						name: _tr("Amount"),
 						type: "VALUE",
 						color: 0xffa1a1a1,
-						default_value: 4.0,
-						min: 1.0,
-						max: 100
+						default_value: 0.1,
+						min: 0,
+						max: 1
 					},
 					{
 						id: 0,
