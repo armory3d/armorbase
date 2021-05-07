@@ -2020,6 +2020,51 @@ class NodesMaterial {
 			},
 			{
 				id: 0,
+				name: _tr("Blend Normal Maps"),
+				type: "BLEND_NORMAL_MAPS",
+				x: 0,
+				y: 0,
+				color: 0xff522c99,
+				inputs: [
+					{
+						id: 0,
+						node_id: 0,
+						name: _tr("1. Normal Map"),
+						type: "VECTOR",
+						color: -10238109,
+						default_value: f32([0.5, 0.5, 1.0])
+					},
+					{
+						id: 0,
+						node_id: 0,
+						name: _tr("2. Normal Map"),
+						type: "VECTOR",
+						color: -10238109,
+						default_value: f32([0.5, 0.5, 1.0])
+					}
+				],
+				outputs: [
+					{
+						id: 0,
+						node_id: 0,
+						name: _tr("Normal Map"),
+						type: "VECTOR",
+						color: -10238109,
+						default_value: f32([0.5, 0.5, 1.0])
+					}
+				],
+				buttons: [
+					{
+						name: _tr("blend_type"),
+						type: "ENUM",
+						data: [_tr("Partial Derivative"), _tr("Whiteout"), _tr("Reoriented")],
+						default_value: 0,
+						output: 0
+					}
+				]
+			},
+			{
+				id: 0,
 				name: _tr("Vector Curves"),
 				type: "CURVE_VEC",
 				x: 0,
