@@ -1500,55 +1500,6 @@ class NodesMaterial {
 		[ // Color
 			{
 				id: 0,
-				name: _tr("Warp"),
-				type: "DIRECT_WARP", // extension
-				x: 0,
-				y: 0,
-				color: 0xff448c6d,
-				inputs: [
-					{
-						id: 0,
-						node_id: 0,
-						name: _tr("Color"),
-						type: "RGBA",
-						color: 0xffc7c729,
-						default_value: f32([0.8, 0.8, 0.8, 1.0])
-					},
-					{
-						id: 0,
-						node_id: 0,
-						name: _tr("Angle"),
-						type: "VALUE",
-						color: 0xffa1a1a1,
-						default_value: 0.0,
-						min: 0.0,
-						max: 360.0
-					},
-					{
-						id: 0,
-						node_id: 0,
-						name: _tr("Mask"),
-						type: "VALUE",
-						color: 0xffa1a1a1,
-						default_value: 0.5,
-						min: 0.0,
-						max: 1.0
-					}
-				],
-				outputs: [
-					{
-						id: 0,
-						node_id: 0,
-						name: _tr("Color"),
-						type: "RGBA",
-						color: 0xffc7c729,
-						default_value: f32([0.8, 0.8, 0.8, 1.0])
-					}
-				],
-				buttons: []
-			},
-			{
-				id: 0,
 				name: _tr("Blur"),
 				type: "BLUR", // extension
 				x: 0,
@@ -1834,7 +1785,7 @@ class NodesMaterial {
 					{
 						id: 0,
 						node_id: 0,
-						name: _tr("Amount"),
+						name: _tr("Stength"),
 						type: "VALUE",
 						color: 0xffa1a1a1,
 						default_value: 0.1,
@@ -1848,6 +1799,55 @@ class NodesMaterial {
 						type: "RGBA",
 						color: 0xffc7c729,
 						default_value: f32([0.0, 0.0, 0.0, 1.0])
+					}
+				],
+				outputs: [
+					{
+						id: 0,
+						node_id: 0,
+						name: _tr("Color"),
+						type: "RGBA",
+						color: 0xffc7c729,
+						default_value: f32([0.8, 0.8, 0.8, 1.0])
+					}
+				],
+				buttons: []
+			},
+			{
+				id: 0,
+				name: _tr("Warp"),
+				type: "DIRECT_WARP", // extension
+				x: 0,
+				y: 0,
+				color: 0xff448c6d,
+				inputs: [
+					{
+						id: 0,
+						node_id: 0,
+						name: _tr("Color"),
+						type: "RGBA",
+						color: 0xffc7c729,
+						default_value: f32([0.8, 0.8, 0.8, 1.0])
+					},
+					{
+						id: 0,
+						node_id: 0,
+						name: _tr("Angle"),
+						type: "VALUE",
+						color: 0xffa1a1a1,
+						default_value: 0.0,
+						min: 0.0,
+						max: 360.0
+					},
+					{
+						id: 0,
+						node_id: 0,
+						name: _tr("Mask"),
+						type: "VALUE",
+						color: 0xffa1a1a1,
+						default_value: 0.5,
+						min: 0.0,
+						max: 1.0
 					}
 				],
 				outputs: [
@@ -2106,6 +2106,59 @@ class NodesMaterial {
 		[ // Converter
 			{
 				id: 0,
+				name: _tr("Clamp"),
+				type: "CLAMP",
+				x: 0,
+				y: 0,
+				color: 0xff62676d,
+				inputs: [
+					{
+						id: 0,
+						node_id: 0,
+						name: _tr("Value"),
+						type: "VALUE",
+						color: 0xffa1a1a1,
+						default_value: 0.5
+					},
+					{
+						id: 0,
+						node_id: 0,
+						name: _tr("Min"),
+						type: "VALUE",
+						color: 0xffa1a1a1,
+						default_value: 0.0
+					},
+					{
+						id: 0,
+						node_id: 0,
+						name: _tr("Max"),
+						type: "VALUE",
+						color: 0xffa1a1a1,
+						default_value: 1.0
+					}
+				],
+				outputs: [
+					{
+						id: 0,
+						node_id: 0,
+						name: _tr("Value"),
+						type: "VALUE",
+						color: 0xffa1a1a1,
+						default_value: 0.0
+					}
+				],
+				buttons: [
+					{
+						name: _tr("operation"),
+						type: "ENUM",
+						data: [_tr("Min Max"), _tr("Range")],
+						default_value: 0,
+						output: 0
+					}
+				]
+			},
+			{
+				id: 0,
 				name: _tr("Color Ramp"),
 				type: "VALTORGB",
 				x: 0,
@@ -2284,6 +2337,74 @@ class NodesMaterial {
 					}
 				],
 				buttons: []
+			},
+			{
+				id: 0,
+				name: _tr("Map Range"),
+				type: "MAPRANGE",
+				x: 0,
+				y: 0,
+				color: 0xff62676d,
+				inputs: [
+					{
+						id: 0,
+						node_id: 0,
+						name: _tr("Value"),
+						type: "VALUE",
+						color: 0xffa1a1a1,
+						default_value: 0.5
+					},
+					{
+						id: 0,
+						node_id: 0,
+						name: _tr("From Min"),
+						type: "VALUE",
+						color: 0xffa1a1a1,
+						default_value: 0.0
+					},
+					{
+						id: 0,
+						node_id: 0,
+						name: _tr("From Max"),
+						type: "VALUE",
+						color: 0xffa1a1a1,
+						default_value: 1.0
+					},
+					{
+						id: 0,
+						node_id: 0,
+						name: _tr("To Min"),
+						type: "VALUE",
+						color: 0xffa1a1a1,
+						default_value: 0.0
+					},
+					{
+						id: 0,
+						node_id: 0,
+						name: _tr("To Max"),
+						type: "VALUE",
+						color: 0xffa1a1a1,
+						default_value: 1.0
+					}
+				],
+				outputs: [
+					{
+						id: 0,
+						node_id: 0,
+						name: _tr("Value"),
+						type: "VALUE",
+						color: 0xffa1a1a1,
+						default_value: 0.0
+					}
+				],
+				buttons: [
+					{
+						name: _tr("use_clamp"),
+						type: "BOOL",
+						default_value: false,
+						output: 0
+					}
+				]
 			},
 			{
 				id: 0,
@@ -2549,127 +2670,6 @@ class NodesMaterial {
 						type: "ENUM",
 						data: [_tr("Add"), _tr("Subtract"), _tr("Multiply"), _tr("Divide"), _tr("Average"), _tr("Dot Product"), _tr("Cross Product"), _tr("Normalize"), _tr("Project"), _tr("Reflect"), _tr("Length"), _tr("Distance")],
 						default_value: 0,
-						output: 0
-					}
-				]
-			},
-			{
-				id: 0,
-				name: _tr("Clamp"),
-				type: "CLAMP",
-				x: 0,
-				y: 0,
-				color: 0xff62676d,
-				inputs: [
-					{
-						id: 0,
-						node_id: 0,
-						name: _tr("Value"),
-						type: "VALUE",
-						color: 0xffa1a1a1,
-						default_value: 0.5
-					},
-					{
-						id: 0,
-						node_id: 0,
-						name: _tr("Min"),
-						type: "VALUE",
-						color: 0xffa1a1a1,
-						default_value: 0.0
-					},
-					{
-						id: 0,
-						node_id: 0,
-						name: _tr("Max"),
-						type: "VALUE",
-						color: 0xffa1a1a1,
-						default_value: 1.0
-					}
-				],
-				outputs: [
-					{
-						id: 0,
-						node_id: 0,
-						name: _tr("Value"),
-						type: "VALUE",
-						color: 0xffa1a1a1,
-						default_value: 0.0
-					}
-				],
-				buttons: [
-					{
-						name: _tr("operation"),
-						type: "ENUM",
-						data: [_tr("Min Max"), _tr("Range")],
-						default_value: 0,
-						output: 0
-					}
-				]
-			},
-			{
-				id: 0,
-				name: _tr("Map Range"),
-				type: "MAPRANGE",
-				x: 0,
-				y: 0,
-				color: 0xff62676d,
-				inputs: [
-					{
-						id: 0,
-						node_id: 0,
-						name: _tr("Value"),
-						type: "VALUE",
-						color: 0xffa1a1a1,
-						default_value: 0.5
-					},
-					{
-						id: 0,
-						node_id: 0,
-						name: _tr("From Min"),
-						type: "VALUE",
-						color: 0xffa1a1a1,
-						default_value: 0.0
-					},
-					{
-						id: 0,
-						node_id: 0,
-						name: _tr("From Max"),
-						type: "VALUE",
-						color: 0xffa1a1a1,
-						default_value: 1.0
-					},
-					{
-						id: 0,
-						node_id: 0,
-						name: _tr("To Min"),
-						type: "VALUE",
-						color: 0xffa1a1a1,
-						default_value: 0.0
-					},
-					{
-						id: 0,
-						node_id: 0,
-						name: _tr("To Max"),
-						type: "VALUE",
-						color: 0xffa1a1a1,
-						default_value: 1.0
-					}
-				],
-				outputs: [
-					{
-						id: 0,
-						node_id: 0,
-						name: _tr("Value"),
-						type: "VALUE",
-						color: 0xffa1a1a1,
-						default_value: 0.0
-					}
-				],
-				buttons: [
-					{
-						name: _tr("use_clamp"),
-						type: "BOOL",
-						default_value: false,
 						output: 0
 					}
 				]

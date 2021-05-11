@@ -677,9 +677,9 @@ class MaterialParser {
 			else return out_col;
 		}
 		else if (node.type == "QUANTIZE") {
-			var amount = parse_value_input(node.inputs[0]);
+			var strength = parse_value_input(node.inputs[0]);
 			var col = parse_vector_input(node.inputs[1]);
-			return '(floor(100*$amount*$col)/(100*$amount))';
+			return '(floor(100.0 * $strength * $col) / (100.0 * $strength))';
 		}
 		else if (node.type == "VALTORGB") { // ColorRamp
 			var fac = parse_value_input(node.inputs[0]);
