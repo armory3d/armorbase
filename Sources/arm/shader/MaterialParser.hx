@@ -676,6 +676,11 @@ class MaterialParser {
 			if (use_clamp) return 'clamp($out_col, vec3(0.0, 0.0, 0.0), vec3(1.0, 1.0, 1.0))';
 			else return out_col;
 		}
+		else if (node.type == "QUANTIZE") {
+			var amount = parse_value_input(node.inputs[0]);
+			var col = parse_vector_input(node.inputs[1]);
+			return '(floor(100*$amount*$col)/(100*$amount))';
+		}
 		else if (node.type == "VALTORGB") { // ColorRamp
 			var fac = parse_value_input(node.inputs[0]);
 			var interp = node.buttons[0].data == 0 ? "LINEAR" : "CONSTANT";
