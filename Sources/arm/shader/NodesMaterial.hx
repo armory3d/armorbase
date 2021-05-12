@@ -1252,12 +1252,6 @@ class NodesMaterial {
 						type: "ENUM",
 						default_value: 0,
 						data: [_tr("Linear"), _tr("sRGB"), _tr("DirectX Normal Map")]
-					},
-					{
-						name: _tr("Invert Color"),
-						type: "BOOL",
-						default_value: false,
-						output: 0
 					}
 				]
 			},

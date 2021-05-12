@@ -495,8 +495,7 @@ class MaterialParser {
 			var tex = make_texture(node, tex_name);
 			if (tex != null) {
 				var color_space = node.buttons[1].default_value;
-				var invert_color = node.buttons[2].default_value == true;
-				var texstore = texture_store(node, tex, tex_name, color_space, invert_color);
+				var texstore = texture_store(node, tex, tex_name, color_space);
 				return '$texstore.rgb';
 			}
 			else {
@@ -1307,8 +1306,7 @@ class MaterialParser {
 			var tex = make_texture(node, tex_name);
 			if (tex != null) {
 				var color_space = node.buttons[1].default_value;
-				var invert_color = node.buttons[2].default_value == true;
-				var texstore = texture_store(node, tex, tex_name, color_space, invert_color);
+				var texstore = texture_store(node, tex, tex_name, color_space);
 				return '$texstore.a';
 			}
 		}
@@ -1678,7 +1676,7 @@ class MaterialParser {
 		return node_name(node) + "_store";
 	}
 
-	static function texture_store(node: TNode, tex: TBindTexture, tex_name: String, color_space : Int, invert_color = false): String {
+	static function texture_store(node: TNode, tex: TBindTexture, tex_name: String, color_space : Int): String {
 		matcon.bind_textures.push(tex);
 		curshader.context.add_elem("tex", "short2norm");
 		curshader.add_uniform("sampler2D " + tex_name);
@@ -1726,10 +1724,6 @@ class MaterialParser {
 		}
 		else if (color_space == 2) { // DirectX normal map to OpenGL normal map
 		    curshader.write('$tex_store.y = 1.0 - $tex_store.y;');
-		}
-
-		if (invert_color) {
-			curshader.write('$tex_store.rgb = 1.0 - $tex_store.rgb;');
 		}
 		return tex_store;
 	}
