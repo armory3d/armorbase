@@ -954,6 +954,35 @@ class MaterialParser {
 
 			return '(0.5 * ${store}_texn + 0.5)';
 		}
+		else if (node.type == "BLEND_NORMAL_MAPS") {
+			var nm1 = parse_vector_input(node.inputs[0]);
+			var nm2 = parse_vector_input(node.inputs[1]);
+			var but = node.buttons[0];
+			var blend: String = but.data[but.default_value].toUpperCase(); //blend type
+			blend = blend.replace(" ", "_");
+			
+			var store = store_var_name(node);
+			
+			/* The blending algorithms are based on the paper 'Blending in Detail' by Colin Barré-Brisebois and Stephen Hill 2012
+			   https://blog.selfshadow.com/publications/blending-in-detail/
+			*/
+			
+			if( blend == "PARTIAL_DERIVATIVE") { //partial derivate blending
+				curshader.write('vec3 ${store}_n1 = $nm1 * 2.0 - 1.0;');
+				curshader.write('vec3 ${store}_n2 = $nm2 * 2.0 - 1.0;');
+				return '0.5*normalize(vec3(${store}_n1.xy*${store}_n2.z + ${store}_n2.xy*${store}_n1.z, ${store}_n1.z*${store}_n2.z))+0.5;';
+			}
+			else if (blend == "WHITEOUT") { //whiteout blending
+				curshader.write('vec3 ${store}_n1 = $nm1 * 2.0 - 1.0;');
+				curshader.write('vec3 ${store}_n2 = $nm2 * 2.0 - 1.0;');
+				return '0.5*normalize(vec3(${store}_n1.xy + ${store}_n2.xy, ${store}_n1.z*${store}_n2.z))+0.5;';
+			}
+			else if (blend == "REORIENTED") { //reoriented normal mapping
+				curshader.write('vec3 ${store}_n1 = $nm1 * 2.0 - vec3(1.0,1.0,0.0);');
+				curshader.write('vec3 ${store}_n2 = $nm2 * vec3(-2.0,-2.0,2.0) - vec3(-1.0,-1.0,1.0);');
+				return '0.5*normalize(${store}_n1*dot(${store}_n1, ${store}_n2) - ${store}_n2*${store}_n1.z)+0.5';
+			}
+		}
 		else if (node.type == "VECT_TRANSFORM") {
 		// 	#type = node.vector_type
 		// 	#conv_from = node.convert_from
