@@ -2760,7 +2760,9 @@ class NodesMaterial {
 		if (ui.button("-")) {
 			if (val.length > 2) val.pop();
 		}
-		var i = Std.int(ui.slider(nhandle.nest(0).nest(2).nest(axis, {position: 0}), "Index", 0, num - 1, false, 1, true, Left));
+		var ihandle = nhandle.nest(0).nest(2).nest(axis, {position: 0});
+		var i = Std.int(ui.slider(ihandle, "Index", 0, num - 1, false, 1, true, Left));
+		if (i >= val.length || i < 0) ihandle.value = i = val.length - 1; // Stay in bounds
 		ui.row([1 / 2, 1 / 2]);
 		nhandle.nest(0).nest(3).value = val[i][0];
 		nhandle.nest(0).nest(4).value = val[i][1];
@@ -2804,11 +2806,17 @@ class NodesMaterial {
 			ihandle.value -= 1;
 		}
 		but.data = ui.combo(nhandle.nest(0).nest(1, {position: but.data}), [tr("Linear"), tr("Constant")], tr("Interpolate"));
+
 		ui.row([1 / 2, 1 / 2]);
 		var i = Std.int(ui.slider(ihandle, "Index", 0, vals.length - 1, false, 1, true, Left));
+		if (i >= vals.length || i < 0) ihandle.value = i = vals.length - 1; // Stay in bounds
+
 		var val = vals[i];
 		nhandle.nest(0).nest(3).value = val[4];
 		val[4] = ui.slider(nhandle.nest(0).nest(3), "Pos", 0, 1, true, 100, true, Left);
+		if (val[4] > 1.0) val[4] = 1.0; // Stay in bounds
+		else if (val[4] < 0.0) val[4] = 0.0;
+
 		var chandle = nhandle.nest(0).nest(4);
 		chandle.color = kha.Color.fromFloats(val[0], val[1], val[2]);
 		if (ui.text("", Right, chandle.color) == Started) {
