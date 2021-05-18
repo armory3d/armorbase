@@ -201,7 +201,6 @@ class NodeShader {
 		s += '#define fract frac\n';
 		s += '#define mix lerp\n';
 		// s += '#define fma mad\n';
-		s += '#define atan(x, y) atan2(y, x)\n';
 		// s += '#define clamp(x, 0.0, 1.0) saturate(x)\n';
 
 		s += header;
@@ -386,7 +385,6 @@ class NodeShader {
 		s += '#define dFdx dfdx\n';
 		s += '#define dFdy dfdy\n';
 		s += '#define inversesqrt rsqrt\n';
-		s += '#define atan(x, y) atan2(y, x)\n';
 		s += '#define mul(a, b) b * a\n';
 		s += '#define discard discard_fragment()\n';
 
@@ -598,6 +596,7 @@ class NodeShader {
 		s += '#define mul(a, b) b * a\n';
 		s += '#define textureShared texture\n';
 		s += '#define textureLodShared textureLod\n';
+		s += '#define atan2(x, y) atan(y, x)\n';
 		s += header;
 
 		var in_ext = '';

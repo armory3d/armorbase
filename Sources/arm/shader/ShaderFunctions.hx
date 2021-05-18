@@ -385,7 +385,7 @@ vec2 envMapEquirect(const vec3 normal, const float angle) {
 	const float PI = 3.1415926535;
 	const float PI2 = PI * 2.0;
 	float phi = acos(normal.z);
-	float theta = atan(-normal.y, normal.x) + PI + angle;
+	float theta = atan2(-normal.y, normal.x) + PI + angle;
 	return vec2(theta / PI2, phi / PI);
 }
 ";

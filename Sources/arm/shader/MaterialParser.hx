@@ -1455,7 +1455,7 @@ class MaterialParser {
 				out_val = 'atan($val1)';
 			}
 			else if (op == "ARCTAN2") {
-				out_val = 'atan($val2, $val1)';
+				out_val = 'atan2($val1, $val2)';
 			}
 			if (use_clamp) {
 				return 'clamp($out_val, 0.0, 1.0)';
@@ -1599,7 +1599,7 @@ class MaterialParser {
 			return '($co.x + $co.y) * 0.5';
 		}
 		else if (grad == "RADIAL") {
-			return 'atan($co.y, $co.x) / (3.141592 * 2.0) + 0.5';
+			return 'atan2($co.x, $co.y) / (3.141592 * 2.0) + 0.5';
 		}
 		else if (grad == "QUADRATIC_SPHERE") {
 			return "0.0";
