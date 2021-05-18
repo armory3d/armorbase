@@ -603,6 +603,8 @@ class Geometry {
 	var lib: FbxLibrary;
 	var root: FbxNode;
 
+	static inline var eps = 1.0 / 32767;
+
 	public function new(l, root) {
 		this.lib = l;
 		this.root = root;
@@ -780,9 +782,9 @@ class Geometry {
 					if (tbuf != null) {
 						var iuv = tbuf.index[k];
 						var uvx = tbuf.values[iuv * 2];
-						if (uvx > 1.0) uvx = uvx - Std.int(uvx);
+						if (uvx > 1.0 + eps) uvx = uvx - Std.int(uvx);
 						var uvy = tbuf.values[iuv * 2 + 1];
-						if (uvy > 1.0) uvy = uvy - Std.int(uvy);
+						if (uvy > 1.0 + eps) uvy = uvy - Std.int(uvy);
 						texa[vlen * 2    ] = Std.int(       uvx  * 32767);
 						texa[vlen * 2 + 1] = Std.int((1.0 - uvy) * 32767);
 					}
