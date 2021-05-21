@@ -1034,6 +1034,42 @@ class MaterialParser {
 			else if (op == "REFLECT") {
 				return 'reflect($vec1, normalize($vec2))';
 			}
+			else if (op == "SCALE") {
+				return '(${vec2}.x * $vec1)';
+			}
+			else if (op == "ABSOLUTE") {
+				return 'abs($vec1)';
+			}
+			else if (op == "MINIMUM") {
+				return 'min($vec1, $vec2)';
+			}
+			else if (op == "MAXIMUM") {
+				return 'max($vec1, $vec2)';
+			}
+			else if (op == "FLOOR") {
+				return 'floor($vec1)';
+			}
+			else if (op == "CEIL") {
+				return 'ceil($vec1)';
+			}
+			else if (op == "FRACTION") {
+				return 'fract($vec1)';
+			}
+			else if (op == "MODULO") {
+				return 'mod($vec1, $vec2)';
+			}
+			else if(op == "SNAP") {
+				return '(floor($vec1 / $vec2) * $vec2)';
+			}
+			else if (op == "SINE") {
+				return 'sin($vec1)';
+			}
+			else if (op == "COSINE") {
+				return 'cos($vec1)';
+			}
+			else if (op == "TANGENT") {
+				return 'tan($vec1)';
+			}
 		}
 		else if (node.type == "Displacement") {
 			var height = parse_value_input(node.inputs[0]);
@@ -1403,6 +1439,12 @@ class MaterialParser {
 			else if (op == "SQUARE_ROOT") {
 				out_val = 'sqrt($val1)';
 			}
+			else if(op == "INVERSE_SQUARE_ROOT") {
+				out_val = 'inversesqrt($val1)';
+			}
+			else if (op == "EXPONENT") {
+				out_val = 'exp($val1)';
+			}
 			else if (op == "ABSOLUTE") {
 				out_val = 'abs($val1)';
 			}
@@ -1418,6 +1460,9 @@ class MaterialParser {
 			else if (op == "GREATER_THAN") {
 				out_val = 'float($val1 > $val2)';
 			}
+			else if (op == "SIGN") {
+				out_val = 'sign($val1)';
+			}
 			else if (op == "ROUND") {
 				out_val = 'floor($val1 + 0.5)';
 			}
@@ -1427,7 +1472,13 @@ class MaterialParser {
 			else if (op == "CEIL") {
 				out_val = 'ceil($val1)';
 			}
-			else if (op == "FRACT") {
+			else if(op == "SNAP") {
+				out_val = '(floor($val1 / $val2) * $val2)';
+			}
+			else if (op == "TRUNCATE") {
+				out_val = 'trunc($val1)';
+			}
+			else if (op == "FRACTION") {
 				out_val = 'fract($val1)';
 			}
 			else if (op == "MODULO") {
@@ -1456,6 +1507,21 @@ class MaterialParser {
 			}
 			else if (op == "ARCTAN2") {
 				out_val = 'atan2($val1, $val2)';
+			}
+			else if (op == "HYPERBOLIC_SINE") {
+				out_val = 'sinh($val1)';
+			}
+			else if (op == "HYPERBOLIC_COSINE") {
+				out_val = 'cosh($val1)';
+			}
+			else if (op == "HYPERBOLIC_TANGENT") {
+				out_val = 'tanh($val1)';
+			}
+			else if (op == "TO_RADIANS") {
+				out_val = 'radians($val1)';
+			}
+			else if (op == "TO_DEGREES") {
+				out_val = 'degrees($val1)';
 			}
 			if (use_clamp) {
 				return 'clamp($out_val, 0.0, 1.0)';
