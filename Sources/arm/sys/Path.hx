@@ -44,6 +44,19 @@ class Path {
 		return base;
 	}
 
+	public static function normalize(path: String): String {
+		var ar = path.split(Path.sep);
+		var i = 0;
+		while (i < ar.length) {
+			if (i > 0 && ar[i] == ".." && ar[i - 1] != "..") {
+				ar.splice(i - 1, 2);
+				i--;
+			}
+			else i++;
+		}
+		return ar.join(Path.sep);
+	}
+
 	public static function baseDir(path: String): String {
 		return path.substr(0, path.lastIndexOf(Path.sep) + 1);
 	}
