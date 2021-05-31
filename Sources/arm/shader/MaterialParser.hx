@@ -1192,8 +1192,8 @@ class MaterialParser {
 		else if (node.type == "LAYER_MASK") {
 			if (socket == node.outputs[0]) {
 				var l = node.buttons[0].default_value;
-				curshader.add_uniform("sampler2D texpaint_mask" + l, "_texpaint_mask" + l);
-				return "texture(texpaint_mask" + l + ", texCoord).r";
+				curshader.add_uniform("sampler2D texpaint" + l, "_texpaint" + l);
+				return "texture(texpaint" + l + ", texCoord).r";
 			}
 		}
 		else if (node.type == "MATERIAL") {
