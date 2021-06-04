@@ -201,7 +201,6 @@ class NodeShader {
 		s += '#define fract frac\n';
 		s += '#define mix lerp\n';
 		// s += '#define fma mad\n';
-		// s += '#define clamp(x, 0.0, 1.0) saturate(x)\n';
 
 		s += header;
 
