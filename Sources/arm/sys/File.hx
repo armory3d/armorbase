@@ -65,6 +65,14 @@ class File {
 		#end
 	}
 
+	public static function loadUrl(url: String) {
+		#if krom_windows // TODO: implement in Kinc
+		Krom.sysCommand('start "" "' + url + '"');
+		#else
+		Krom.loadUrl(url);
+		#end
+	}
+
 	public static function delete(path: String) {
 		Krom.sysCommand(cmd_del + ' "' + path + '"');
 	}
