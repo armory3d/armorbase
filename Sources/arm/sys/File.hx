@@ -93,6 +93,10 @@ class File {
 		}
 		#elseif krom_linux
 		Krom.sysCommand('wget -O "' + dstPath + '" ' + url);
+		#elseif (krom_android || krom_ios)
+		Krom.httpRequest(url, size, function(ab: js.lib.ArrayBuffer) {
+			if (ab != null) Krom.fileSaveBytes(dstPath, ab);
+		});
 		#else
 		Krom.sysCommand('curl -L ' + url + ' -o "' + dstPath + '"');
 		#end
