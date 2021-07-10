@@ -31,6 +31,20 @@ class Res {
 		var size = Config.raw.window_scale > 1 ? 36 : 18;
 		return { x: x * size, y: img.height - (y + 1) * size, w: size, h: size };
 	}
+
+	#if arm_snapshot
+	public static function embedRaw(handle: String, name: String, file: js.lib.ArrayBuffer) {
+		iron.data.Data.cachedBlobs.set(name, kha.Blob.fromBytes(haxe.io.Bytes.ofData(file)));
+		iron.data.Data.getSceneRaw(handle, function(_) {});
+		iron.data.Data.cachedBlobs.remove(name);
+	}
+	public static function embedBlob(name: String, file: js.lib.ArrayBuffer) {
+		iron.data.Data.cachedBlobs.set(name, kha.Blob.fromBytes(haxe.io.Bytes.ofData(file)));
+	}
+	public static function embedFont(name: String, file: js.lib.ArrayBuffer) {
+		iron.data.Data.cachedFonts.set(name, new kha.Font(kha.Blob.fromBytes(haxe.io.Bytes.ofData(file))));
+	}
+	#end
 }
 
 typedef TRect = {
