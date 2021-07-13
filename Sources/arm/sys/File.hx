@@ -140,7 +140,7 @@ class File {
 		}, cloudSizes.get(path));
 	}
 
-	static function initCloud(done: Void->Void) {
+	static function initCloud() {
 		cloud = [];
 		cloudSizes = [];
 		File.downloadBytes(Config.raw.server, function(bytes: Bytes) {
@@ -177,7 +177,6 @@ class File {
 					}
 				}
 			}
-			done();
 		});
 	}
 }
