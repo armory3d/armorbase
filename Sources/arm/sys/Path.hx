@@ -162,6 +162,8 @@ class Path {
 		return Krom.getFilesLocation().indexOf("Program Files") >= 0;
 		#elseif krom_android
 		return true;
+		#elseif krom_ios
+		return true;
 		#else
 		return false;
 		#end

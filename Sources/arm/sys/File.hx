@@ -108,9 +108,14 @@ class File {
 	}
 
 	public static function cacheCloud(path: String, done: String->Void) {
-		var dest = (Path.isProtected() ? Krom.savePath() : Krom.getFilesLocation() + Path.sep) + path;
+		#if krom_ios
+		var path2 = path.replace("/", "_"); // Cache everything into root folder
+		#else
+		var path2 = path;
+		#end
+		var dest = (Path.isProtected() ? Krom.savePath() : Krom.getFilesLocation() + Path.sep) + path2;
 		if (File.exists(dest)) {
-			#if krom_darwin
+			#if (krom_darwin || krom_ios)
 			done(dest);
 			#else
 			done((Path.isProtected() ? Krom.savePath() : Path.workingDir() + Path.sep) + path);
@@ -132,7 +137,7 @@ class File {
 				done(null);
 				return;
 			}
-			#if krom_darwin
+			#if (krom_darwin || krom_ios)
 			done(dest);
 			#else
 			done((Path.isProtected() ? Krom.savePath() : Path.workingDir() + Path.sep) + path);
