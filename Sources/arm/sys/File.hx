@@ -27,8 +27,7 @@ class File {
 
 	public static function readDirectory(path: String, foldersOnly = false): Array<String> {
 		if (path.startsWith("cloud")) {
-			if (cloud == null) initCloud();
-			var files = cloud.get(path.replace("\\", "/"));
+			var files = cloud != null ? cloud.get(path.replace("\\", "/")) : null;
 			return files != null ? files : [];
 		}
 		#if krom_android
@@ -81,98 +80,104 @@ class File {
 		return Krom.fileExists(path);
 	}
 
-	public static function download(url: String, dstPath: String, size: Null<Int> = null) {
-		#if krom_windows
-		if (size == null) {
-			Krom.sysCommand('powershell -c "Invoke-WebRequest -Uri ' + url + " -OutFile '" + dstPath + "'");
-		}
-		else {
-			Krom.httpRequest(url, size, function(ab: js.lib.ArrayBuffer) {
-				if (ab != null) Krom.fileSaveBytes(dstPath, ab);
-			});
-		}
-		#elseif krom_linux
-		Krom.sysCommand('wget -O "' + dstPath + '" ' + url);
-		#elseif (krom_android || krom_ios)
+	public static function download(url: String, dstPath: String, done: Void->Void, size = 0) {
+		#if (krom_windows || krom_darwin || krom_ios || krom_android)
 		Krom.httpRequest(url, size, function(ab: js.lib.ArrayBuffer) {
 			if (ab != null) Krom.fileSaveBytes(dstPath, ab);
+			done();
 		});
+		#elseif krom_linux
+		Krom.sysCommand('wget -O "' + dstPath + '" ' + url);
+		done();
 		#else
 		Krom.sysCommand('curl -L ' + url + ' -o "' + dstPath + '"');
+		done();
 		#end
 	}
 
-	public static function downloadBytes(url: String): Bytes {
+	public static function downloadBytes(url: String, done: Bytes->Void) {
 		var save = (Path.isProtected() ? Krom.savePath() : Path.data() + Path.sep) + "download.bin";
-		download(url, save);
-		try {
-			return Bytes.ofData(Krom.loadBlob(save));
-		}
-		catch (e: Dynamic) {
-			return null;
-		}
+		File.download(url, save, function() {
+			try {
+				done(Bytes.ofData(Krom.loadBlob(save)));
+			}
+			catch (e: Dynamic) {
+				done(null);
+			}
+		});
 	}
 
-	public static function cacheCloud(path: String): String {
+	public static function cacheCloud(path: String, done: String->Void) {
 		var dest = (Path.isProtected() ? Krom.savePath() : Krom.getFilesLocation() + Path.sep) + path;
-		if (!File.exists(dest)) {
-			var fileDir = dest.substr(0, dest.lastIndexOf(Path.sep));
-			if (File.readDirectory(fileDir)[0] == "") {
-				File.createDirectory(fileDir);
-			}
-			#if krom_windows
-			path = path.replace("\\", "/");
+		if (File.exists(dest)) {
+			#if krom_darwin
+			done(dest);
+			#else
+			done((Path.isProtected() ? Krom.savePath() : Path.workingDir() + Path.sep) + path);
 			#end
-			var url = Config.raw.server + "/" + path;
-			File.download(url, dest, cloudSizes.get(path));
-			if (!File.exists(dest)) {
-				Console.error(Strings.error5());
-				return null;
-			}
-		}
-		#if krom_darwin
-		return dest;
-		#else
-		return (Path.isProtected() ? Krom.savePath() : Path.workingDir() + Path.sep) + path;
-		#end
-	}
-
-	static function initCloud() {
-		cloud = [];
-		cloudSizes = [];
-		var files: Array<String> = [];
-		var sizes: Array<Int> = [];
-		var bytes = File.downloadBytes(Config.raw.server);
-		if (bytes == null) {
-			cloud.set("cloud", []);
-			Console.error(Strings.error5());
 			return;
 		}
-		for (e in Xml.parse(bytes.toString()).firstElement().elementsNamed("Contents")) {
-			for (k in e.elementsNamed("Key")) {
-				files.push(k.firstChild().nodeValue);
-			}
-			for (k in e.elementsNamed("Size")) {
-				sizes.push(Std.parseInt(k.firstChild().nodeValue));
-			}
+
+		var fileDir = dest.substr(0, dest.lastIndexOf(Path.sep));
+		if (File.readDirectory(fileDir)[0] == "") {
+			File.createDirectory(fileDir);
 		}
-		for (file in files) {
-			if (Path.isFolder(file)) {
-				cloud.set(file.substr(0, file.length - 1), []);
+		#if krom_windows
+		path = path.replace("\\", "/");
+		#end
+		var url = Config.raw.server + "/" + path;
+		File.download(url, dest, function() {
+			if (!File.exists(dest)) {
+				Console.error(Strings.error5());
+				done(null);
+				return;
 			}
-		}
-		for (i in 0...files.length) {
-			var file = files[i];
-			var nested = file.indexOf("/") != file.lastIndexOf("/");
-			if (nested) {
-				var delim = Path.isFolder(file) ? file.substr(0, file.length - 1).lastIndexOf("/") : file.lastIndexOf("/");
-				var parent = file.substr(0, delim);
-				var child = Path.isFolder(file) ? file.substring(delim + 1, file.length - 1)  : file.substr(delim + 1);
-				cloud.get(parent).push(child);
-				if (!Path.isFolder(file)) {
-					cloudSizes.set(file, sizes[i]);
+			#if krom_darwin
+			done(dest);
+			#else
+			done((Path.isProtected() ? Krom.savePath() : Path.workingDir() + Path.sep) + path);
+			#end
+		}, cloudSizes.get(path));
+	}
+
+	static function initCloud(done: Void->Void) {
+		cloud = [];
+		cloudSizes = [];
+		File.downloadBytes(Config.raw.server, function(bytes: Bytes) {
+			if (bytes == null) {
+				cloud.set("cloud", []);
+				Console.error(Strings.error5());
+				return;
+			}
+			var files: Array<String> = [];
+			var sizes: Array<Int> = [];
+			for (e in Xml.parse(bytes.toString()).firstElement().elementsNamed("Contents")) {
+				for (k in e.elementsNamed("Key")) {
+					files.push(k.firstChild().nodeValue);
+				}
+				for (k in e.elementsNamed("Size")) {
+					sizes.push(Std.parseInt(k.firstChild().nodeValue));
 				}
 			}
-		}
+			for (file in files) {
+				if (Path.isFolder(file)) {
+					cloud.set(file.substr(0, file.length - 1), []);
+				}
+			}
+			for (i in 0...files.length) {
+				var file = files[i];
+				var nested = file.indexOf("/") != file.lastIndexOf("/");
+				if (nested) {
+					var delim = Path.isFolder(file) ? file.substr(0, file.length - 1).lastIndexOf("/") : file.lastIndexOf("/");
+					var parent = file.substr(0, delim);
+					var child = Path.isFolder(file) ? file.substring(delim + 1, file.length - 1)  : file.substr(delim + 1);
+					cloud.get(parent).push(child);
+					if (!Path.isFolder(file)) {
+						cloudSizes.set(file, sizes[i]);
+					}
+				}
+			}
+			done();
+		});
 	}
 }

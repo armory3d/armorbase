@@ -92,17 +92,24 @@ class Translator {
 			newFont = { path : "font_cjk.ttc", scale : 1.4 };
 			var cjkFontPath = Path.data() + Path.sep + newFont.path;
 			if (!File.exists(cjkFontPath)) {
-				File.download("https://github.com/armory3d/armorbase/raw/main/Assets/common/extra/font_cjk.ttc", cjkFontPath);
+				File.download("https://github.com/armory3d/armorbase/raw/main/Assets/common/extra/font_cjk.ttc", cjkFontPath, function() {
+					if (!File.exists(cjkFontPath)) {
+						// Fall back to English
+						Config.raw.locale = "en";
+						extendedGlyphs();
+						translations.clear();
+						newFont = { path : "font.ttf", scale : 1.0 };
+						initFont(false, newFont);
+					}
+					else initFont(true, newFont);
+				}, 20332392);
 			}
-			if (!File.exists(cjkFontPath)) {
-				// Fall back to English
-				Config.raw.locale = "en";
-				extendedGlyphs();
-				translations.clear();
-				newFont = { path : "font.ttf", scale : 1.0 };
-			}
+			else initFont(true, newFont);
 		}
+		else initFont(false, newFont);
+	}
 
+	static function initFont(cjk: Bool, newFont: Dynamic) {
 		kha.graphics2.Graphics.fontGlyphs.sort(Reflect.compare);
 		// Load and assign font with cjk characters
 		iron.App.notifyOnInit(function() {
