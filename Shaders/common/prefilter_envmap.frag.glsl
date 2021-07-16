@@ -9,7 +9,11 @@ out vec4 fragColor;
 
 const float PI = 3.14159265358979;
 const float PI2 = PI * 2.0;
+#ifdef METAL
+const int samples = 1024 * 2; // Prevent gpu hang
+#else
 const int samples = 1024 * 16;
+#endif
 
 float rand(vec2 co) {
 	return fract(sin(mod(dot(co.xy, vec2(12.9898, 78.233)), 3.14)) * 43758.5453);
