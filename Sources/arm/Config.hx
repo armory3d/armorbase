@@ -8,9 +8,6 @@ import kha.WindowMode;
 import kha.System;
 import iron.data.Data;
 import arm.ui.UISidebar;
-import arm.ui.UINodes;
-import arm.ui.UIView2D;
-import arm.ui.UIStatus;
 import arm.render.Inc;
 import arm.sys.File;
 import arm.sys.Path;
@@ -279,11 +276,7 @@ class Config {
 		}
 		App.theme.FILL_WINDOW_BG = true;
 		if (tagRedraw) {
-			App.uiBox.t = App.theme;
-			App.uiMenu.t = App.theme;
-			UISidebar.inst.ui.t = App.theme;
-			UINodes.inst.ui.t = App.theme;
-			UIView2D.inst.ui.t = App.theme;
+			for (ui in App.getUIs()) ui.t = App.theme;
 			UISidebar.inst.tagUIRedraw();
 		}
 		#if arm_touchui
