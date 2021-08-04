@@ -45,9 +45,11 @@ class MaterialParser {
 	public static var parse_height_as_channel = false;
 	public static var parse_emission = false;
 	public static var parse_subsurface = false;
+	public static var parsing_basecolor = false;
 	public static var triplanar = false; // Sample using texCoord/1/2 & texCoordBlend
 	public static var sample_keep_aspect = false; // Adjust uvs to preserve texture aspect ratio
 	public static var sample_uv_scale = '1.0';
+	public static var transform_color_space = true;
 
 	public static var blur_passthrough = false;
 	public static var warp_passthrough = false;
@@ -106,6 +108,7 @@ class MaterialParser {
 		cotangentFrameWritten = false;
 		out_normaltan = "vec3(0.5, 0.5, 1.0)";
 		script_links = null;
+		parsing_basecolor = false;
 	}
 
 	public static function parse(canvas: TNodeCanvas, _con: NodeShaderContext, _vert: NodeShader, _frag: NodeShader, _matcon: TMaterialContext): TShaderOut {
@@ -363,7 +366,9 @@ class MaterialParser {
 				// Normal - parsed first to retrieve uv coords
 				parse_normal_map_color_input(node.inputs[5]);
 				// Base color
+				parsing_basecolor = true;
 				sout.out_basecol = parse_vector_input(node.inputs[0]);
+				parsing_basecolor = false;
 				// Occlusion
 				sout.out_occlusion = parse_value_input(node.inputs[2]);
 				// Roughness
@@ -1742,7 +1747,7 @@ class MaterialParser {
 		return node_name(node) + "_store";
 	}
 
-	static function texture_store(node: TNode, tex: TBindTexture, tex_name: String, color_space : Int): String {
+	static function texture_store(node: TNode, tex: TBindTexture, tex_name: String, color_space: Int): String {
 		matcon.bind_textures.push(tex);
 		curshader.context.add_elem("tex", "short2norm");
 		curshader.add_uniform("sampler2D " + tex_name);
@@ -1785,11 +1790,17 @@ class MaterialParser {
 			}
 		}
 
-		if (color_space == 1) { // sRGB to linear
-			curshader.write('$tex_store.rgb = pow($tex_store.rgb, vec3(2.2, 2.2, 2.2));');
-		}
-		else if (color_space == 2) { // DirectX normal map to OpenGL normal map
-		    curshader.write('$tex_store.y = 1.0 - $tex_store.y;');
+		if (transform_color_space) {
+			// Base color socket auto-converts from sRGB to linear
+			if (color_space == SpaceLinear && parsing_basecolor) { // Linear to sRGB
+				curshader.write('$tex_store.rgb = pow($tex_store.rgb, vec3(2.2, 2.2, 2.2));');
+			}
+			else if (color_space == SpaceSRGB && !parsing_basecolor) { // sRGB to linear
+				curshader.write('$tex_store.rgb = pow($tex_store.rgb, vec3(1.0 / 2.2, 1.0 / 2.2, 1.0 / 2.2));');
+			}
+			else if (color_space == SpaceDirectXNormalMap) { // DirectX normal map to OpenGL normal map
+				curshader.write('$tex_store.y = 1.0 - $tex_store.y;');
+			}
 		}
 		return tex_store;
 	}
@@ -1911,4 +1922,11 @@ typedef TShaderOut = {
 	var out_height: String;
 	var out_emission: String;
 	var out_subsurface: String;
+}
+
+@:enum abstract ColorSpace(Int) from Int to Int {
+	var SpaceAuto = 0; // sRGB for base color, otherwise linear
+	var SpaceLinear = 1;
+	var SpaceSRGB = 2;
+	var SpaceDirectXNormalMap = 3;
 }

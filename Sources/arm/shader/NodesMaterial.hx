@@ -1251,7 +1251,7 @@ class NodesMaterial {
 						name: _tr("Color Space"),
 						type: "ENUM",
 						default_value: 0,
-						data: [_tr("Linear"), _tr("sRGB"), _tr("DirectX Normal Map")]
+						data: [_tr("Auto"), _tr("Linear"), _tr("sRGB"), _tr("DirectX Normal Map")]
 					}
 				]
 			},
