@@ -34,6 +34,7 @@ class Camera {
 				!App.uiEnabled ||
 				App.isDragging ||
 				App.isScrolling() ||
+				App.isComboSelected() ||
 				mouse.viewX < 0 ||
 				mouse.viewX > iron.App.w() ||
 				mouse.viewY < 0 ||
