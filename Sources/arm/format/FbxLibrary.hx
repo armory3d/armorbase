@@ -758,7 +758,7 @@ class Geometry {
 		var posa = new kha.arrays.Int16Array(vlen * 4);
 		var nora = new kha.arrays.Int16Array(vlen * 2);
 		var texa = tbuf != null ? new kha.arrays.Int16Array(vlen * 2) : null;
-		var cola = cbuf != null ? new kha.arrays.Int16Array(vlen * 4) : null;
+		var cola = cbuf != null ? new kha.arrays.Int16Array(vlen * 3) : null;
 		var inda = new kha.arrays.Uint32Array(ilen);
 
 		pos = 0;
