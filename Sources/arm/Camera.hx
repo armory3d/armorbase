@@ -34,12 +34,25 @@ class Camera {
 				!App.uiEnabled ||
 				App.isDragging ||
 				App.isScrolling() ||
-				App.isComboSelected() ||
-				mouse.viewX < 0 ||
+				App.isComboSelected()) {
+				return;
+			}
+
+			if (mouse.viewX < 0 ||
 				mouse.viewX > iron.App.w() ||
 				mouse.viewY < 0 ||
 				mouse.viewY > iron.App.h()) {
-				return;
+
+				// var wrapMouse = true;
+				// if (wrapMouse && redraws > 0) {
+				// 	if (mouse.viewX < 0) Krom.setMousePosition(0, iron.App.x() + iron.App.w(), Std.int(mouse.y));
+				// 	else if (mouse.viewX > iron.App.w()) Krom.setMousePosition(0, iron.App.x(), Std.int(mouse.y));
+				// 	else if (mouse.viewY < 0) Krom.setMousePosition(0, Std.int(mouse.x), iron.App.y() + iron.App.h());
+				// 	else if (mouse.viewY > iron.App.h()) Krom.setMousePosition(0, Std.int(mouse.x), iron.App.y());
+				// }
+				// else {
+					return;
+				// }
 			}
 
 			var modifKey = kb.down("alt") || kb.down("shift") || kb.down("control");
