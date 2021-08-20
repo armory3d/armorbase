@@ -16,6 +16,7 @@ class Camera {
 	var first = true;
 	var dir = new Vec4();
 	var ease = 1.0;
+	var controlsDown = false;
 
 	public function new() {
 		inst = this;
@@ -30,33 +31,67 @@ class Camera {
 				reset();
 			}
 
-			if (Input.occupied ||
-				!App.uiEnabled ||
-				App.isDragging ||
-				App.isScrolling() ||
-				App.isComboSelected()) {
-				return;
-			}
-
 			if (mouse.viewX < 0 ||
 				mouse.viewX > iron.App.w() ||
 				mouse.viewY < 0 ||
 				mouse.viewY > iron.App.h()) {
 
-				// var wrapMouse = true;
-				// if (wrapMouse && redraws > 0) {
-				// 	if (mouse.viewX < 0) Krom.setMousePosition(0, iron.App.x() + iron.App.w(), Std.int(mouse.y));
-				// 	else if (mouse.viewX > iron.App.w()) Krom.setMousePosition(0, iron.App.x(), Std.int(mouse.y));
-				// 	else if (mouse.viewY < 0) Krom.setMousePosition(0, Std.int(mouse.x), iron.App.y() + iron.App.h());
-				// 	else if (mouse.viewY > iron.App.h()) Krom.setMousePosition(0, Std.int(mouse.x), iron.App.y());
-				// }
-				// else {
+				if (Config.raw.wrap_mouse && controlsDown) {
+					if (mouse.viewX < 0) {
+						@:privateAccess mouse.x = mouse.lastX = iron.App.x() + iron.App.w();
+						Krom.setMousePosition(0, Std.int(mouse.x), Std.int(mouse.y));
+					}
+					else if (mouse.viewX > iron.App.w()) {
+						@:privateAccess mouse.x = mouse.lastX = iron.App.x();
+						Krom.setMousePosition(0, Std.int(mouse.x), Std.int(mouse.y));
+					}
+					else if (mouse.viewY < 0) {
+						@:privateAccess mouse.y = mouse.lastY = iron.App.y() + iron.App.h();
+						Krom.setMousePosition(0, Std.int(mouse.x), Std.int(mouse.y));
+					}
+					else if (mouse.viewY > iron.App.h()) {
+						@:privateAccess mouse.y = mouse.lastY = iron.App.y();
+						Krom.setMousePosition(0, Std.int(mouse.x), Std.int(mouse.y));
+					}
+				}
+				else {
 					return;
-				// }
+				}
 			}
 
 			var modifKey = kb.down("alt") || kb.down("shift") || kb.down("control");
 			var modif = modifKey || Config.keymap.action_rotate == "middle";
+
+			if (Operator.shortcut(Config.keymap.action_rotate, ShortcutStarted) ||
+				Operator.shortcut(Config.keymap.action_zoom, ShortcutStarted) ||
+				Operator.shortcut(Config.keymap.action_pan, ShortcutStarted) ||
+				Operator.shortcut(Config.keymap.rotate_envmap, ShortcutStarted) ||
+				Operator.shortcut(Config.keymap.rotate_light, ShortcutStarted) ||
+				(mouse.started("right") && !modif) ||
+				(mouse.started("middle") && !modif) ||
+				(mouse.wheelDelta != 0 && !modifKey)) {
+				controlsDown = true;
+			}
+			else if (!Operator.shortcut(Config.keymap.action_rotate, ShortcutDown) &&
+				!Operator.shortcut(Config.keymap.action_zoom, ShortcutDown) &&
+				!Operator.shortcut(Config.keymap.action_pan, ShortcutDown) &&
+				!Operator.shortcut(Config.keymap.rotate_envmap, ShortcutDown) &&
+				!Operator.shortcut(Config.keymap.rotate_light, ShortcutDown) &&
+				!(mouse.down("right") && !modif) &&
+				!(mouse.down("middle") && !modif) &&
+				(mouse.wheelDelta == 0 && !modifKey)) {
+				controlsDown = false;
+			}
+
+			if (Input.occupied ||
+				!App.uiEnabled ||
+				App.isDragging ||
+				App.isScrolling() ||
+				App.isComboSelected() ||
+				!controlsDown) {
+				return;
+			}
+
 			var controls = Context.cameraControls;
 			if (controls == ControlsOrbit) {
 				if (Operator.shortcut(Config.keymap.action_rotate, ShortcutDown) || (mouse.down("right") && !modif)) {
