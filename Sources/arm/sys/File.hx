@@ -5,17 +5,11 @@ import haxe.io.Bytes;
 class File {
 
 	#if krom_windows
-	static inline var cmd_dir = "dir /b";
-	static inline var cmd_dir_nofile = "dir /b /ad";
 	static inline var cmd_mkdir = "mkdir";
 	static inline var cmd_copy = "copy";
-	static inline var cmd_del = "del /f";
 	#else
-	static inline var cmd_dir = "ls";
-	static inline var cmd_dir_nofile = "ls";
 	static inline var cmd_mkdir = "mkdir -p";
 	static inline var cmd_copy = "cp";
-	static inline var cmd_del = "rm";
 	#end
 
 	static var cloud: Map<String, Array<String>> = null;
@@ -73,7 +67,7 @@ class File {
 	}
 
 	public static function delete(path: String) {
-		Krom.sysCommand(cmd_del + ' "' + path + '"');
+		Krom.deleteFile(path);
 	}
 
 	public static function exists(path: String): Bool {
