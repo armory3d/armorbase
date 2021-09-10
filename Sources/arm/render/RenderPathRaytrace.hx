@@ -43,15 +43,13 @@ class RenderPathRaytrace {
 		if (!Context.envmapLoaded) Context.loadEnvmap();
 		var probe = Scene.active.world.probe;
 		var savedEnvmap = Context.showEnvmapBlur ? probe.radianceMipmaps[0] : Context.savedEnvmap;
-		var isLive = Config.raw.brush_live && RenderPathPaint.liveLayerDrawn > 0;
-		var layer = (isLive || useLiveLayer) ? RenderPathPaint.liveLayer : Context.layer;
 		if (lastEnvmap != savedEnvmap) {
 			lastEnvmap = savedEnvmap;
 			var bnoise_sobol = Scene.active.embedded.get("bnoise_sobol.k");
 			var bnoise_scramble = Scene.active.embedded.get("bnoise_scramble.k");
 			var bnoise_rank = Scene.active.embedded.get("bnoise_rank.k");
-			Layers.flatten(true);
-			Krom.raytraceSetTextures(Layers.expa.renderTarget_, Layers.expb.renderTarget_, Layers.expc.renderTarget_, savedEnvmap.texture_, bnoise_sobol.texture_, bnoise_scramble.texture_, bnoise_rank.texture_);
+			var l = Layers.flatten(true);
+			Krom.raytraceSetTextures(l.texpaint.renderTarget_, l.texpaint_nor.renderTarget_, l.texpaint_pack.renderTarget_, savedEnvmap.texture_, bnoise_sobol.texture_, bnoise_scramble.texture_, bnoise_rank.texture_);
 		}
 
 		if (Context.pdirty > 0 || dirty > 0) {
