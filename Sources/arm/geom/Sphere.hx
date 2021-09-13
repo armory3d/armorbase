@@ -11,7 +11,7 @@ class Sphere {
 	public var name = "";
 	public var hasNext = false;
 
-	public function new(radius = 1.0, widthSegments = 32, heightSegments = 16, stretchUV = true) {
+	public function new(radius = 1.0, widthSegments = 32, heightSegments = 16, stretchUV = true, uvScale = 1.0) {
 		// Pack positions to (-1, 1) range
 		scalePos = radius;
 		var inv = (1 / scalePos) * 32767;
@@ -48,8 +48,8 @@ class Sphere {
 				posa[i4 + 3] = Std.int(nor.z * 32767);
 				nora[i2    ] = Std.int(nor.x * 32767);
 				nora[i2 + 1] = Std.int(nor.y * 32767);
-				texa[i2    ] = Std.int((u + uOff) * 32767);
-				texa[i2 + 1] = Std.int(vFlip      * 32767);
+				texa[i2    ] = Std.int((u + uOff) * 32767 * uvScale) % 32767;
+				texa[i2 + 1] = Std.int(vFlip      * 32767 * uvScale) % 32767;
 				pos++;
 			}
 		}

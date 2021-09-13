@@ -11,7 +11,7 @@ class Plane {
 	public var name = "";
 	public var hasNext = false;
 
-	public function new(sizeX = 1.0, sizeY = 1.0, vertsX = 2, vertsY = 2) {
+	public function new(sizeX = 1.0, sizeY = 1.0, vertsX = 2, vertsY = 2, uvScale = 1.0) {
 		// Pack positions to (-1, 1) range
 		var halfX = sizeX / 2;
 		var halfY = sizeY / 2;
@@ -35,8 +35,8 @@ class Plane {
 			posa[i * 4 + 3] = 32767;
 			x = (i % vertsX) / (vertsX - 1);
 			y = Std.int(i / vertsX) / (vertsY - 1);
-			texa[i * 2    ] = Std.int(x * 32767);
-			texa[i * 2 + 1] = Std.int(y * 32767);
+			texa[i * 2    ] = Std.int(x * 32767 * uvScale) % 32767;
+			texa[i * 2 + 1] = Std.int(y * 32767 * uvScale) % 32767;
 		}
 		for (i in 0...(vertsX - 1) * (vertsY - 1)) {
 			var x = i % (vertsX - 1);
