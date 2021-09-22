@@ -80,13 +80,11 @@ vec4 SMAADecodeDiagBilinearAccess(vec4 e) {
 vec2 SMAASearchDiag1(vec2 texcoord, vec2 dir/*, out vec2 e*/) {
 	vec4 coord = vec4(texcoord, -1.0, 1.0);
 	vec3 t = vec3(screenSizeInv.xy, 1.0);
-	float cw = coord.w; // TODO: krafix hlsl bug
-	while (coord.z < float(SMAA_MAX_SEARCH_STEPS_DIAG - 1) && cw > 0.9) {
+	while (coord.z < float(SMAA_MAX_SEARCH_STEPS_DIAG - 1) && coord.w > 0.9) {
 		coord.xyz = mad(t, vec3(dir, 1.0), coord.xyz);
 		cdw_end /*e*/ = textureLodA(edgesTex, coord.xy, 0.0).rg;
-		cw = dot(cdw_end /*e*/, vec2(0.5, 0.5));
+		coord.w = dot(cdw_end /*e*/, vec2(0.5, 0.5));
 	}
-	coord.w = cw;
 	return coord.zw;
 }
 
