@@ -103,7 +103,7 @@ void raygeneration() {
 			#endif
 
 			#ifdef _EMISSION
-			if (payload.color.a  == -2) {
+			if (payload.color.a == -2) {
 				accum += payload.color.rgb;
 				break;
 			}
@@ -227,14 +227,14 @@ void closesthit(inout RayPayload payload, in BuiltInTriangleIntersectionAttribut
 	payload.ray_origin = hit_world_position() + payload.ray_dir * 0.0001f;
 
 	#ifdef _EMISSION
-	if (texpaint1.a == 1.0) { // matid
+	if (int(texpaint1.a * 255.0f) % 3 == 1) { // matid
 		payload.color.xyz *= 100.0f;
 		payload.color.a = -2.0;
 	}
 	#endif
 
 	#ifdef _SUBSURFACE
-	if (texpaint1.a == (254.0f / 255.0f)) {
+	if (int(texpaint1.a * 255.0f) % 3 == 2) {
 		payload.ray_origin += WorldRayDirection() * f;
 	}
 	#endif
