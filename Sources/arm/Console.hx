@@ -24,7 +24,9 @@ class Console {
 			g.fontSize = Std.int(22 * scale);
 			g.color = 0xffffffff;
 			g.drawString(s, x - g.font.width(g.fontSize, s) / 2, y + 40 * scale - g.font.height(g.fontSize) / 2);
-			iron.App.removeRender2D(_render);
+			arm.App.notifyOnNextFrame(function() {
+				iron.App.removeRender2D(_render);
+			});
 		}
 		iron.App.notifyOnRender2D(_render);
 		consoleTrace(s);
