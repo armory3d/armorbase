@@ -350,7 +350,8 @@ class ObjParser {
 				udims = [];
 				udimsU = tilesU;
 				for (i in 0...tilesU * tilesV) {
-					udims.push(new kha.arrays.Uint32Array(num[i])); num[i] = 0;
+					udims.push(new kha.arrays.Uint32Array(num[i]));
+					num[i] = 0;
 				}
 
 				for (i in 0...Std.int(inda.length / 3)) {
