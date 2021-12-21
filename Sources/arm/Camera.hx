@@ -98,10 +98,10 @@ class Camera {
 					redraws = 2;
 					var dist = distance();
 					camera.transform.move(camera.lookWorld(), dist);
-					camera.transform.rotate(Vec4.zAxis(), -mouse.movementX / 100);
-					camera.transform.rotate(camera.rightWorld(), -mouse.movementY / 100);
+					camera.transform.rotate(Vec4.zAxis(), -mouse.movementX / 100 * Config.raw.camera_speed);
+					camera.transform.rotate(camera.rightWorld(), -mouse.movementY / 100 * Config.raw.camera_speed);
 					if (camera.upWorld().z < 0) {
-						camera.transform.rotate(camera.rightWorld(), mouse.movementY / 100);
+						camera.transform.rotate(camera.rightWorld(), mouse.movementY / 100 * Config.raw.camera_speed);
 					}
 					camera.transform.move(camera.lookWorld(), -dist);
 				}
@@ -251,8 +251,8 @@ class Camera {
 		var mouse = Input.getMouse();
 		if (Operator.shortcut(Config.keymap.action_pan, ShortcutDown) || (mouse.down("middle") && !modif)) {
 			redraws = 2;
-			var look = camera.transform.look().normalize().mult(mouse.movementY / 150);
-			var right = camera.transform.right().normalize().mult(-mouse.movementX / 150);
+			var look = camera.transform.look().normalize().mult(mouse.movementY / 150 * Config.raw.camera_speed);
+			var right = camera.transform.right().normalize().mult(-mouse.movementX / 150 * Config.raw.camera_speed);
 			camera.transform.loc.add(look);
 			camera.transform.loc.add(right);
 			origins[index()].add(look);
