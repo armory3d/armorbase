@@ -30,7 +30,7 @@ class LineDraw {
 	static var vp: Mat4;
 	static var vpID: ConstantLocation;
 
-	static var vbData: kha.arrays.Float32Array;
+	static var vbData: kha.arrays.ByteArray;
 	static var ibData: kha.arrays.Uint32Array;
 
 	static inline var maxLines = 300;
@@ -211,7 +211,7 @@ class LineDraw {
 
 	inline static function addVbData(i: Int, data: Array<Float>) {
 		for (offset in 0...6) {
-			vbData.set(i + offset, data[offset]);
+			vbData.setFloat32((i + offset) * 4, data[offset]);
 		}
 	}
 }
