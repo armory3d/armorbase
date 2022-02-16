@@ -19,6 +19,12 @@ class Translator {
 
 	static var lastLocale = "en";
 
+	// Mark strings as localizable in order to be parsed by the extract_locale script.
+	// The string will not be translated to the currently selected locale though.
+	public static inline function _tr(s: String) {
+		return s;
+	}
+
 	// Localizes a string with the given placeholders replaced (format is `{placeholderName}`).
 	// If the string isn't available in the translation, this method will return the source English string.
 	public static function tr(id: String, vars: Map<String, String> = null): String {
