@@ -5,13 +5,9 @@ import zui.Zui;
 import zui.Id;
 import zui.Nodes;
 import arm.Project;
+import arm.Translator._tr;
 
 class NodesMaterial {
-
-	// Mark strings as localizable
-	public static inline function _tr(s: String) {
-		return s;
-	}
 
 	public static var categories = [_tr("Input"), _tr("Texture"), _tr("Color"), _tr("Vector"), _tr("Converter"), _tr("Group")];
 
