@@ -1419,8 +1419,7 @@ class MaterialParser {
 			var maskColor = parse_vector_input(node.inputs[1]);
 			var radius = parse_value_input(node.inputs[2]);
 			var fuzziness = parse_value_input(node.inputs[3]);
-
-			return 'clamp(1- (distance($inputColor,$maskColor) - $radius) / max($fuzziness,$eps),0.0,1.0)';
+			return 'clamp(1.0 - (distance($inputColor, $maskColor) - $radius) / max($fuzziness, $eps), 0.0, 1.0)';
 		}
 		else if (node.type == "MATH") {
 			var val1 = parse_value_input(node.inputs[0]);
