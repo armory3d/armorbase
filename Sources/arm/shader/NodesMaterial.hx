@@ -2240,6 +2240,61 @@ class NodesMaterial {
 			},
 			{
 				id: 0,
+				name: _tr("Color Mask"),
+				type: "COLMASK",
+				x: 0,
+				y: 0,
+				color: 0xff62676d,
+				inputs: [
+					{
+						id: 0,
+						node_id: 0,
+						name: _tr("Color"),
+						type: "RGBA",
+						color: 0xffc7c729,
+						default_value: f32([0.8, 0.8, 0.8, 1.0])
+					},
+					{
+						id: 0,
+						node_id: 0,
+						name: _tr("Mask Color"),
+						type: "RGBA",
+						color: 0xffc7c729,
+						default_value: f32([0.8, 0.8, 0.8, 1.0])
+					},
+					{
+						id: 0,
+						node_id: 0,
+						name: _tr("Radius"),
+						type: "VALUE",
+						color: 0xffa1a1a1,
+						default_value: 0.1,
+						min: 0.0,
+						max: 1.74
+					},
+					{
+						id: 0,
+						node_id: 0,
+						name: _tr("Fuzziness"),
+						type: "VALUE",
+						color: 0xffa1a1a1,
+						default_value: 0.0
+					}
+				],
+				outputs: [
+					{
+						id: 0,
+						node_id: 0,
+						name: _tr("Mask"),
+						type: "VALUE",
+						color: 0xffa1a1a1,
+						default_value: 0.0
+					}
+				],
+				buttons: []
+			},
+			{
+				id: 0,
 				name: _tr("Combine HSV"),
 				type: "COMBHSV",
 				x: 0,
