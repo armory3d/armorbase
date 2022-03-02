@@ -141,12 +141,12 @@ class Camera {
 					redraws = 2;
 					var t = Context.mainObject().transform;
 					var up = t.up().normalize();
-					t.rotate(up, mouse.movementX / 100);
+					t.rotate(up, mouse.movementX / 100 * Config.raw.camera_rotation_speed);
 					var right = camera.rightWorld().normalize();
-					t.rotate(right, mouse.movementY / 100);
+					t.rotate(right, mouse.movementY / 100 * Config.raw.camera_rotation_speed);
 					t.buildMatrix();
 					if (t.up().z < 0) {
-						t.rotate(right, -mouse.movementY / 100);
+						t.rotate(right, -mouse.movementY / 100 * Config.raw.camera_rotation_speed);
 					}
 				}
 
@@ -194,7 +194,8 @@ class Camera {
 					if (ease < 0.0) ease = 0.0;
 				}
 
-				var d = Time.delta * fast * ease * 2.0 * Config.raw.camera_pan_speed;
+
+				var d = Time.delta * fast * ease * 2.0 * ( (moveForward || moveBackward) ? Config.raw.camera_zoom_speed : Config.raw.camera_pan_speed );
 				if (d > 0.0) {
 					camera.transform.move(dir, d);
 					if (Context.cameraType == CameraOrthographic) {
@@ -203,8 +204,8 @@ class Camera {
 				}
 
 				redraws = 2;
-				camera.transform.rotate(Vec4.zAxis(), -mouse.movementX / 200);
-				camera.transform.rotate(camera.right(), -mouse.movementY / 200);
+				camera.transform.rotate(Vec4.zAxis(), -mouse.movementX / 200 * Config.raw.camera_rotation_speed);
+				camera.transform.rotate(camera.right(), -mouse.movementY / 200 * Config.raw.camera_rotation_speed);
 			}
 
 			if (redraws > 0) {
