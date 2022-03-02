@@ -34,14 +34,6 @@ class Config {
 				configLoaded = true;
 				raw = Json.parse(blob.toString());
 
-				// Update existing configs to use newly added configurations
-				if (raw.camera_pan_speed == null)
-					raw.camera_pan_speed = 1.0;
-				if (raw.camera_zoom_speed == null)
-					raw.camera_zoom_speed = 1.0;
-				if (raw.camera_rotation_speed == null)
-					raw.camera_rotation_speed = 1.0;
-
 				done();
 			});
 		}
