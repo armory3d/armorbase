@@ -33,6 +33,7 @@ class Config {
 			Data.getBlob((Path.isProtected() ? Krom.savePath() : "") + "config.arm", function(blob: kha.Blob) {
 				configLoaded = true;
 				raw = Json.parse(blob.toString());
+
 				done();
 			});
 		}

@@ -98,10 +98,10 @@ class Camera {
 					redraws = 2;
 					var dist = distance();
 					camera.transform.move(camera.lookWorld(), dist);
-					camera.transform.rotate(Vec4.zAxis(), -mouse.movementX / 100 * Config.raw.camera_speed);
-					camera.transform.rotate(camera.rightWorld(), -mouse.movementY / 100 * Config.raw.camera_speed);
+					camera.transform.rotate(Vec4.zAxis(), -mouse.movementX / 100 * Config.raw.camera_rotation_speed);
+					camera.transform.rotate(camera.rightWorld(), -mouse.movementY / 100 * Config.raw.camera_rotation_speed);
 					if (camera.upWorld().z < 0) {
-						camera.transform.rotate(camera.rightWorld(), mouse.movementY / 100 * Config.raw.camera_speed);
+						camera.transform.rotate(camera.rightWorld(), mouse.movementY / 100 * Config.raw.camera_rotation_speed);
 					}
 					camera.transform.move(camera.lookWorld(), -dist);
 				}
@@ -111,14 +111,14 @@ class Camera {
 				if (Operator.shortcut(Config.keymap.action_zoom, ShortcutDown)) {
 					redraws = 2;
 					var f = getZoomDelta() / 150;
-					f *= getCameraSpeed();
+					f *= getCameraZoomSpeed();
 					camera.transform.move(camera.look(), f);
 				}
 
 				if (mouse.wheelDelta != 0 && !modifKey) {
 					redraws = 2;
 					var f = mouse.wheelDelta * (-0.1);
-					f *= getCameraSpeed();
+					f *= getCameraZoomSpeed();
 					camera.transform.move(camera.look(), f);
 				}
 
@@ -141,12 +141,12 @@ class Camera {
 					redraws = 2;
 					var t = Context.mainObject().transform;
 					var up = t.up().normalize();
-					t.rotate(up, mouse.movementX / 100);
+					t.rotate(up, mouse.movementX / 100 * Config.raw.camera_rotation_speed);
 					var right = camera.rightWorld().normalize();
-					t.rotate(right, mouse.movementY / 100);
+					t.rotate(right, mouse.movementY / 100 * Config.raw.camera_rotation_speed);
 					t.buildMatrix();
 					if (t.up().z < 0) {
-						t.rotate(right, -mouse.movementY / 100);
+						t.rotate(right, -mouse.movementY / 100 * Config.raw.camera_rotation_speed);
 					}
 				}
 
@@ -155,14 +155,14 @@ class Camera {
 				if (Operator.shortcut(Config.keymap.action_zoom, ShortcutDown)) {
 					redraws = 2;
 					var f = getZoomDelta() / 150;
-					f *= getCameraSpeed();
+					f *= getCameraZoomSpeed();
 					camera.transform.move(camera.look(), f);
 				}
 
 				if (mouse.wheelDelta != 0) {
 					redraws = 2;
 					var f = mouse.wheelDelta * (-0.1);
-					f *= getCameraSpeed();
+					f *= getCameraZoomSpeed();
 					camera.transform.move(camera.look(), f);
 				}
 			}
@@ -194,7 +194,8 @@ class Camera {
 					if (ease < 0.0) ease = 0.0;
 				}
 
-				var d = Time.delta * fast * ease * 2.0 * Config.raw.camera_speed;
+
+				var d = Time.delta * fast * ease * 2.0 * ( (moveForward || moveBackward) ? Config.raw.camera_zoom_speed : Config.raw.camera_pan_speed );
 				if (d > 0.0) {
 					camera.transform.move(dir, d);
 					if (Context.cameraType == CameraOrthographic) {
@@ -203,8 +204,8 @@ class Camera {
 				}
 
 				redraws = 2;
-				camera.transform.rotate(Vec4.zAxis(), -mouse.movementX / 200);
-				camera.transform.rotate(camera.right(), -mouse.movementY / 200);
+				camera.transform.rotate(Vec4.zAxis(), -mouse.movementX / 200 * Config.raw.camera_rotation_speed);
+				camera.transform.rotate(camera.right(), -mouse.movementY / 200 * Config.raw.camera_rotation_speed);
 			}
 
 			if (redraws > 0) {
@@ -227,11 +228,11 @@ class Camera {
 		return Context.viewIndexLast > 0 ? 1 : 0;
 	}
 
-	function getCameraSpeed(): Float {
+	function getCameraZoomSpeed(): Float {
 		var sign = Config.raw.zoom_direction == ZoomVerticalInverted ||
 				   Config.raw.zoom_direction == ZoomHorizontalInverted ||
 				   Config.raw.zoom_direction == ZoomVerticalAndHorizontalInverted ? -1 : 1;
-		return Config.raw.camera_speed * sign;
+		return Config.raw.camera_zoom_speed * sign;
 	}
 
 	public function reset(viewIndex = -1) {
@@ -251,8 +252,8 @@ class Camera {
 		var mouse = Input.getMouse();
 		if (Operator.shortcut(Config.keymap.action_pan, ShortcutDown) || (mouse.down("middle") && !modif)) {
 			redraws = 2;
-			var look = camera.transform.look().normalize().mult(mouse.movementY / 150 * Config.raw.camera_speed);
-			var right = camera.transform.right().normalize().mult(-mouse.movementX / 150 * Config.raw.camera_speed);
+			var look = camera.transform.look().normalize().mult(mouse.movementY / 150 * Config.raw.camera_pan_speed);
+			var right = camera.transform.right().normalize().mult(-mouse.movementX / 150 * Config.raw.camera_pan_speed);
 			camera.transform.loc.add(look);
 			camera.transform.loc.add(right);
 			origins[index()].add(look);
