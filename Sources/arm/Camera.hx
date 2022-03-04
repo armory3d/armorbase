@@ -133,20 +133,6 @@ class Camera {
 					f *= getCameraZoomSpeed();
 					camera.transform.move(camera.look(), f);
 				}
-
-				if (Operator.shortcut(Config.keymap.rotate_light, ShortcutDown)) {
-					redraws = 2;
-					var light = iron.Scene.active.lights[0];
-					var m = iron.math.Mat4.identity();
-					m.self = kha.math.FastMatrix4.rotationZ(mouse.movementX / 100);
-					light.transform.local.multmat(m);
-					light.transform.decompose();
-				}
-
-				if (Operator.shortcut(Config.keymap.rotate_envmap, ShortcutDown)) {
-					redraws = 2;
-					Context.envmapAngle -= mouse.movementX / 100;
-				}
 			}
 			else if (controls == ControlsFly && mouse.down("right")) {
 				var moveForward = kb.down("w") || kb.down("up") || mouse.wheelDelta < 0;
@@ -188,6 +174,20 @@ class Camera {
 				redraws = 2;
 				camera.transform.rotate(Vec4.zAxis(), -mouse.movementX / 200 * Config.raw.camera_rotation_speed);
 				camera.transform.rotate(camera.right(), -mouse.movementY / 200 * Config.raw.camera_rotation_speed);
+			}
+
+			if (Operator.shortcut(Config.keymap.rotate_light, ShortcutDown)) {
+				redraws = 2;
+				var light = iron.Scene.active.lights[0];
+				var m = iron.math.Mat4.identity();
+				m.self = kha.math.FastMatrix4.rotationZ(mouse.movementX / 100);
+				light.transform.local.multmat(m);
+				light.transform.decompose();
+			}
+
+			if (Operator.shortcut(Config.keymap.rotate_envmap, ShortcutDown)) {
+				redraws = 2;
+				Context.envmapAngle -= mouse.movementX / 100;
 			}
 
 			if (redraws > 0) {
