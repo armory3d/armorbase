@@ -180,6 +180,7 @@ class Camera {
 				redraws = 2;
 				var light = iron.Scene.active.lights[0];
 				var m = iron.math.Mat4.identity();
+				Context.lightAngle = (Context.lightAngle + ((mouse.movementX / 100) % (2*Math.PI) + 2*Math.PI)) % (2*Math.PI);
 				m.self = kha.math.FastMatrix4.rotationZ(mouse.movementX / 100);
 				light.transform.local.multmat(m);
 				light.transform.decompose();
