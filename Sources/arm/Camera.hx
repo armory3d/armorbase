@@ -163,7 +163,7 @@ class Camera {
 				}
 
 
-				var d = Time.delta * fast * ease * 2.0 * ( (moveForward || moveBackward) ? Config.raw.camera_zoom_speed : Config.raw.camera_pan_speed );
+				var d = Time.delta * fast * ease * 2.0 * ((moveForward || moveBackward) ? Config.raw.camera_zoom_speed : Config.raw.camera_pan_speed);
 				if (d > 0.0) {
 					camera.transform.move(dir, d);
 					if (Context.cameraType == CameraOrthographic) {
@@ -180,7 +180,7 @@ class Camera {
 				redraws = 2;
 				var light = iron.Scene.active.lights[0];
 				var m = iron.math.Mat4.identity();
-				Context.lightAngle = (Context.lightAngle + ((mouse.movementX / 100) % (2*Math.PI) + 2*Math.PI)) % (2*Math.PI);
+				Context.lightAngle = (Context.lightAngle + ((mouse.movementX / 100) % (2 * Math.PI) + 2 * Math.PI)) % (2 * Math.PI);
 				m.self = kha.math.FastMatrix4.rotationZ(mouse.movementX / 100);
 				light.transform.local.multmat(m);
 				light.transform.decompose();
