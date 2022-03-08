@@ -93,19 +93,31 @@ class Camera {
 			}
 
 			var controls = Context.cameraControls;
-			if (controls == ControlsOrbit) {
-				if (Operator.shortcut(Config.keymap.action_rotate, ShortcutDown) || (mouse.down("right") && !modif)) {
-					redraws = 2;
-					var dist = distance();
-					camera.transform.move(camera.lookWorld(), dist);
-					camera.transform.rotate(Vec4.zAxis(), -mouse.movementX / 100 * Config.raw.camera_rotation_speed);
-					camera.transform.rotate(camera.rightWorld(), -mouse.movementY / 100 * Config.raw.camera_rotation_speed);
-					if (camera.upWorld().z < 0) {
-						camera.transform.rotate(camera.rightWorld(), mouse.movementY / 100 * Config.raw.camera_rotation_speed);
-					}
-					camera.transform.move(camera.lookWorld(), -dist);
+			if (controls == ControlsOrbit && (Operator.shortcut(Config.keymap.action_rotate, ShortcutDown) || (mouse.down("right") && !modif))) {
+				redraws = 2;
+				var dist = distance();
+				camera.transform.move(camera.lookWorld(), dist);
+				camera.transform.rotate(Vec4.zAxis(), -mouse.movementX / 100 * Config.raw.camera_rotation_speed);
+				camera.transform.rotate(camera.rightWorld(), -mouse.movementY / 100 * Config.raw.camera_rotation_speed);
+				if (camera.upWorld().z < 0) {
+					camera.transform.rotate(camera.rightWorld(), mouse.movementY / 100 * Config.raw.camera_rotation_speed);
 				}
-
+				camera.transform.move(camera.lookWorld(), -dist);
+			}
+			else if (controls == ControlsRotate && (Operator.shortcut(Config.keymap.action_rotate, ShortcutDown) || (mouse.down("right") && !modif))) {
+				redraws = 2;
+				var t = Context.mainObject().transform;
+				var up = t.up().normalize();
+				t.rotate(up, mouse.movementX / 100 * Config.raw.camera_rotation_speed);
+				var right = camera.rightWorld().normalize();
+				t.rotate(right, mouse.movementY / 100 * Config.raw.camera_rotation_speed);
+				t.buildMatrix();
+				if (t.up().z < 0) {
+					t.rotate(right, -mouse.movementY / 100 * Config.raw.camera_rotation_speed);
+				}
+			}
+			
+			if (controls == ControlsRotate || controls == ControlsOrbit) {
 				panAction(modif);
 
 				if (Operator.shortcut(Config.keymap.action_zoom, ShortcutDown)) {
@@ -116,50 +128,6 @@ class Camera {
 				}
 
 				if (mouse.wheelDelta != 0 && !modifKey) {
-					redraws = 2;
-					var f = mouse.wheelDelta * (-0.1);
-					f *= getCameraZoomSpeed();
-					camera.transform.move(camera.look(), f);
-				}
-
-				if (Operator.shortcut(Config.keymap.rotate_light, ShortcutDown)) {
-					redraws = 2;
-					var light = iron.Scene.active.lights[0];
-					var m = iron.math.Mat4.identity();
-					m.self = kha.math.FastMatrix4.rotationZ(mouse.movementX / 100);
-					light.transform.local.multmat(m);
-					light.transform.decompose();
-				}
-
-				if (Operator.shortcut(Config.keymap.rotate_envmap, ShortcutDown)) {
-					redraws = 2;
-					Context.envmapAngle -= mouse.movementX / 100;
-				}
-			}
-			else if (controls == ControlsRotate) {
-				if (Operator.shortcut(Config.keymap.action_rotate, ShortcutDown) || (mouse.down("right") && !modif)) {
-					redraws = 2;
-					var t = Context.mainObject().transform;
-					var up = t.up().normalize();
-					t.rotate(up, mouse.movementX / 100 * Config.raw.camera_rotation_speed);
-					var right = camera.rightWorld().normalize();
-					t.rotate(right, mouse.movementY / 100 * Config.raw.camera_rotation_speed);
-					t.buildMatrix();
-					if (t.up().z < 0) {
-						t.rotate(right, -mouse.movementY / 100 * Config.raw.camera_rotation_speed);
-					}
-				}
-
-				panAction(modif);
-
-				if (Operator.shortcut(Config.keymap.action_zoom, ShortcutDown)) {
-					redraws = 2;
-					var f = getZoomDelta() / 150;
-					f *= getCameraZoomSpeed();
-					camera.transform.move(camera.look(), f);
-				}
-
-				if (mouse.wheelDelta != 0) {
 					redraws = 2;
 					var f = mouse.wheelDelta * (-0.1);
 					f *= getCameraZoomSpeed();
@@ -206,6 +174,20 @@ class Camera {
 				redraws = 2;
 				camera.transform.rotate(Vec4.zAxis(), -mouse.movementX / 200 * Config.raw.camera_rotation_speed);
 				camera.transform.rotate(camera.right(), -mouse.movementY / 200 * Config.raw.camera_rotation_speed);
+			}
+
+			if (Operator.shortcut(Config.keymap.rotate_light, ShortcutDown)) {
+				redraws = 2;
+				var light = iron.Scene.active.lights[0];
+				var m = iron.math.Mat4.identity();
+				m.self = kha.math.FastMatrix4.rotationZ(mouse.movementX / 100);
+				light.transform.local.multmat(m);
+				light.transform.decompose();
+			}
+
+			if (Operator.shortcut(Config.keymap.rotate_envmap, ShortcutDown)) {
+				redraws = 2;
+				Context.envmapAngle -= mouse.movementX / 100;
 			}
 
 			if (redraws > 0) {
