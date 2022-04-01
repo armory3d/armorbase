@@ -116,8 +116,13 @@ class Path {
 		return p.endsWith(".txt");
 	}
 
+	public static function isGimpColorPalette(path: String): Bool {
+		var p = path.toLowerCase();
+		return p.endsWith(".gpl");
+	}
+
 	public static function isKnown(path: String): Bool {
-		return isMesh(path) || isTexture(path) || isFont(path) || isProject(path) || isPlugin(path) || isText(path);
+		return isMesh(path) || isTexture(path) || isFont(path) || isProject(path) || isPlugin(path) || isText(path) || isGimpColorPalette(path);
 	}
 
 	static function checkExt(p: String, exts: Array<String>): Bool {
