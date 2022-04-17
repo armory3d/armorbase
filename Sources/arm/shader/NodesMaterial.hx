@@ -56,6 +56,23 @@ class NodesMaterial {
 			},
 			{
 				id: 0,
+				x: 50,
+				y: 200,
+				name: _tr("Input"),
+				type: "MATERIAL_INPUT",
+				inputs: [],
+				outputs: [],
+				buttons: [
+					{
+						name: "arm.shader.NodesMaterial.materialInputButton",
+						type: "CUSTOM",
+						height: 1
+					}
+				],
+				color: 0xff448c6d
+			},
+			{
+				id: 0,
 				name: _tr("Camera Data"),
 				type: "CAMERA",
 				x: 0,
@@ -2949,6 +2966,25 @@ class NodesMaterial {
 		if (ui.button(tr("Nodes"))) {
 			arm.ui.UINodes.inst.groupStack.push(group);
 		}
+	}
+
+	@:keep
+	public static function materialInputButton(ui: Zui, nodes: Nodes, node: TNode) {
+			if (ui.button(tr("Add"))) {
+				arm.ui.UIMenu.draw(function(ui: Zui) {
+					ui.text(tr("Socket"), Right, ui.t.HIGHLIGHT_COL);
+					
+					if (ui.button(tr("RGBA"), Left)) {
+						node.outputs.push(createSocket(nodes, node, null, "RGBA", Context.material.canvas));
+					}
+					if (ui.button(tr("Vector"), Left)) {
+						node.outputs.push(createSocket(nodes, node, null, "VECTOR", Context.material.canvas));
+					}
+					if (ui.button(tr("Value"), Left)) {
+						node.outputs.push(createSocket(nodes, node, null, "VALUE", Context.material.canvas));
+					}
+				}, 4);
+			}
 	}
 
 	@:keep
