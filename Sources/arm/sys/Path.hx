@@ -159,7 +159,7 @@ class Path {
 	}
 
 	public static function isFolder(p: String): Bool {
-		return p.indexOf(".") == -1;
+		return p.replace("\\", "/").split("/").pop().indexOf(".") == -1;
 	}
 
 	public static function isProtected(): Bool {
