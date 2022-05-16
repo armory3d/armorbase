@@ -88,12 +88,12 @@ class File {
 	public static function downloadBytes(url: String, done: Bytes->Void) {
 		var save = (Path.isProtected() ? Krom.savePath() : Path.data() + Path.sep) + "download.bin";
 		File.download(url, save, function() {
+			var bytes: Bytes = null;
 			try {
-				done(Bytes.ofData(Krom.loadBlob(save)));
+				bytes = Bytes.ofData(Krom.loadBlob(save));
 			}
-			catch (e: Dynamic) {
-				done(null);
-			}
+			catch (e: Dynamic) {}
+			done(bytes);
 		});
 	}
 
