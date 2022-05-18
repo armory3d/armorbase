@@ -77,7 +77,7 @@ class File {
 			done();
 		});
 		#elseif krom_linux
-		Krom.sysCommand('wget -O "' + dstPath + '" ' + url);
+		Krom.sysCommand('wget -O "' + dstPath + '" "' + url + '"');
 		done();
 		#else
 		Krom.sysCommand('curl -L ' + url + ' -o "' + dstPath + '"');
