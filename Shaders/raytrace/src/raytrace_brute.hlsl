@@ -22,7 +22,7 @@ struct Vertex {
 struct RayGenConstantBuffer {
 	float4 eye; // xyz, frame
 	float4x4 inv_vp;
-	float4 params; // envstr, envangle
+	float4 params; // envstr, envangle, uvscale
 };
 
 struct RayPayload {
@@ -162,11 +162,12 @@ void closesthit(inout RayPayload payload, in BuiltInTriangleIntersectionAttribut
 		S16toF32(vertices[indices_sample[1]].tex),
 		S16toF32(vertices[indices_sample[2]].tex)
 	};
-	float2 tex_coord = hit_attribute2d(vertex_uvs, attr);
+	float2 tex_coord = hit_attribute2d(vertex_uvs, attr) * constant_buffer.params.z;
 
 	uint2 size;
 	mytexture0.GetDimensions(size.x, size.y);
-	float4 texpaint0 = mytexture0.Load(uint3(tex_coord * size, 0));
+	uint3 utex_coord = uint3((tex_coord - uint2(tex_coord)) * size, 0);
+	float4 texpaint0 = mytexture0.Load(utex_coord);
 
 	#ifdef _TRANSPARENCY
 	if (texpaint0.a <= 0.1) {
@@ -184,8 +185,8 @@ void closesthit(inout RayPayload payload, in BuiltInTriangleIntersectionAttribut
 	};
 	float3 n = normalize(hit_attribute(vertex_normals, attr));
 
-	float4 texpaint1 = mytexture1.Load(uint3(tex_coord * size, 0));
-	float4 texpaint2 = mytexture2.Load(uint3(tex_coord * size, 0));
+	float4 texpaint1 = mytexture1.Load(utex_coord);
+	float4 texpaint2 = mytexture2.Load(utex_coord);
 	float3 texcolor = pow(texpaint0.rgb, float3(2.2, 2.2, 2.2));
 
 	float3 tangent = float3(0, 0, 0);

@@ -10,6 +10,7 @@ class RenderPathRaytrace {
 	public static var frame = 0;
 	public static var ready = false;
 	public static var dirty = 0;
+	public static var uvScale = 1.0;
 	static var path: RenderPath;
 	static var first = true;
 	static var f32 = new kha.arrays.Float32Array(24);
@@ -86,6 +87,7 @@ class RenderPathRaytrace {
 		f32[20] = Scene.active.world.probe.raw.strength * 1.5;
 		if (!Context.showEnvmap) f32[20] = -f32[20];
 		f32[21] = Context.envmapAngle;
+		f32[22] = uvScale;
 
 		var framebuffer = path.renderTargets.get("buf").image;
 		Krom.raytraceDispatchRays(framebuffer.renderTarget_, f32.buffer);
