@@ -30,7 +30,7 @@ class Config {
 
 	public static function load(done: Void->Void) {
 		try {
-			Data.getBlob((Path.isProtected() ? Krom.savePath() : "") + "config.arm", function(blob: kha.Blob) {
+			Data.getBlob((Path.isProtected() ? Krom.savePath() : "") + "config.json", function(blob: kha.Blob) {
 				configLoaded = true;
 				raw = Json.parse(blob.toString());
 
@@ -40,7 +40,7 @@ class Config {
 		catch (e: Dynamic) {
 			#if krom_linux
 			try { // Protected directory
-				Data.getBlob(Krom.savePath() + "config.arm", function(blob: kha.Blob) {
+				Data.getBlob(Krom.savePath() + "config.json", function(blob: kha.Blob) {
 					configLoaded = true;
 					raw = Json.parse(blob.toString());
 					done();
@@ -58,12 +58,12 @@ class Config {
 	public static function save() {
 		// Use system application data folder
 		// when running from protected path like "Program Files"
-		var path = (Path.isProtected() ? Krom.savePath() : Path.data() + Path.sep) + "config.arm";
+		var path = (Path.isProtected() ? Krom.savePath() : Path.data() + Path.sep) + "config.json";
 		var bytes = Bytes.ofString(Json.stringify(raw));
 		Krom.fileSaveBytes(path, bytes.getData());
 
 		#if krom_linux // Protected directory
-		if (!File.exists(path)) Krom.fileSaveBytes(Krom.savePath() + "config.arm", bytes.getData());
+		if (!File.exists(path)) Krom.fileSaveBytes(Krom.savePath() + "config.json", bytes.getData());
 		#end
 	}
 
