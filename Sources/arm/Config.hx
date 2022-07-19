@@ -104,9 +104,6 @@ class Config {
 			#end
 			raw.rp_ssr = false;
 			raw.rp_supersample = 1.0;
-			#if krom_darwin
-			raw.rp_supersample = 0.5;
-			#end
 			raw.version = Main.version;
 			raw.sha = Main.sha;
 			App.initConfig();
