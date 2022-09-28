@@ -11,7 +11,7 @@ class Console {
 	public static var lastTraces: Array<String> = [""];
 	static var haxeTrace: Dynamic->haxe.PosInfos->Void = null;
 
-	public static function toast(s: String) {
+	public static function toast(s: String, g: kha.graphics2.Graphics = null) {
 		// Show a popup message
 		function _render(g: kha.graphics2.Graphics) {
 			g.color = 0x55000000;
@@ -28,7 +28,7 @@ class Console {
 				iron.App.removeRender2D(_render);
 			});
 		}
-		iron.App.notifyOnRender2D(_render);
+		g != null ? _render(g) : iron.App.notifyOnRender2D(_render);
 		consoleTrace(s);
 	}
 
