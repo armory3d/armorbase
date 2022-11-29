@@ -21,11 +21,11 @@ class Config {
 	public static var keymap: TKeymap;
 	public static var configLoaded = false;
 	#if arm_touchui
-	public static inline var buttonAlign = zui.Zui.Align.Center;
-	public static inline var buttonSpacing = "";
+	public static var buttonAlign = zui.Zui.Align.Center;
+	public static var buttonSpacing = "";
 	#else
-	public static inline var buttonAlign = zui.Zui.Align.Left;
-	public static inline var buttonSpacing = "      ";
+	public static var buttonAlign = zui.Zui.Align.Left;
+	public static var buttonSpacing = "      ";
 	#end
 
 	public static function load(done: Void->Void) {
@@ -277,9 +277,16 @@ class Config {
 			for (ui in App.getUIs()) ui.t = App.theme;
 			UISidebar.inst.tagUIRedraw();
 		}
-		#if arm_touchui
-		App.theme.FULL_TABS = true;
-		#end
+		if (Config.raw.touch_ui) {
+			App.theme.FULL_TABS = true;
+			buttonAlign = zui.Zui.Align.Center;
+			buttonSpacing = "";
+		}
+		else {
+			App.theme.FULL_TABS = false;
+			buttonAlign = zui.Zui.Align.Left;
+			buttonSpacing = "      ";
+		}
 	}
 
 	public static function enablePlugin(f: String) {
