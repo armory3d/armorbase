@@ -76,7 +76,7 @@ void main() {
 
 	occ = mix(1.0, occ, dotNV); // AO Fresnel
 
-	vec2 envBRDF = textureLod(senvmapBrdf, vec2(roughness, 1.0 - dotNV), 0.0).xy;
+	vec2 envBRDF = texelFetch(senvmapBrdf, ivec2(vec2(roughness, 1.0 - dotNV) * 256.0), 0).xy;
 
 	// Envmap
 	vec4 envmapDataLocal = envmapData; // TODO: SPIRV workaround
