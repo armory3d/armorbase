@@ -93,10 +93,10 @@ class Translator {
 			}
 		}
 
-		var newFont = { path : "font.ttf", scale : 1.0 };
+		var newFont = { path: "font.ttf", scale: 1.0 };
 		if (cjk) {
-			newFont = { path : "font_cjk.ttc", scale : 1.4 };
-			var cjkFontPath = Path.data() + Path.sep + newFont.path;
+			newFont = { path: (Path.isProtected() ? Krom.savePath() : "") + "font_cjk.ttc", scale: 1.4 };
+			var cjkFontPath = (Path.isProtected() ? Krom.savePath() : Path.data() + Path.sep) + "font_cjk.ttc";
 			if (!File.exists(cjkFontPath)) {
 				File.download("https://github.com/armory3d/armorbase/raw/main/Assets/common/extra/font_cjk.ttc", cjkFontPath, function() {
 					if (!File.exists(cjkFontPath)) {
@@ -104,7 +104,7 @@ class Translator {
 						Config.raw.locale = "en";
 						extendedGlyphs();
 						translations.clear();
-						newFont = { path : "font.ttf", scale : 1.0 };
+						newFont = { path: "font.ttf", scale: 1.0 };
 						initFont(false, newFont);
 					}
 					else initFont(true, newFont);
