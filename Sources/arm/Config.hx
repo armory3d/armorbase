@@ -7,6 +7,7 @@ import kha.WindowOptions;
 import kha.WindowMode;
 import kha.System;
 import iron.data.Data;
+import zui.Zui;
 import arm.ui.UISidebar;
 import arm.render.Inc;
 import arm.sys.File;
@@ -20,13 +21,8 @@ class Config {
 	public static var raw: TConfig = null;
 	public static var keymap: TKeymap;
 	public static var configLoaded = false;
-	#if arm_touchui
-	public static var buttonAlign = zui.Zui.Align.Center;
-	public static var buttonSpacing = "";
-	#else
 	public static var buttonAlign = zui.Zui.Align.Left;
 	public static var buttonSpacing = "      ";
-	#end
 
 	public static function load(done: Void->Void) {
 		try {
@@ -121,6 +117,7 @@ class Config {
 			}
 		}
 
+		Zui.touchScroll = Zui.touchHold = Zui.touchTooltip = Config.raw.touch_ui;
 		App.resHandle.position = raw.layer_res;
 		loadKeymap();
 	}
