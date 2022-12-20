@@ -276,9 +276,9 @@ class Config {
 		}
 		if (Config.raw.touch_ui) {
 			App.theme.FULL_TABS = true;
-			App.theme.ELEMENT_H += 4;
-			App.theme.BUTTON_H += 4;
-			App.theme.FONT_SIZE += 1;
+			App.theme.ELEMENT_H = 24 + 4;
+			App.theme.BUTTON_H = 22 + 4;
+			App.theme.FONT_SIZE = 13 + 2;
 			buttonAlign = zui.Zui.Align.Center;
 			buttonSpacing = "";
 		}
