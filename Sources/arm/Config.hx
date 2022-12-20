@@ -275,10 +275,14 @@ class Config {
 			UISidebar.inst.tagUIRedraw();
 		}
 		if (Config.raw.touch_ui) {
+			// Enlarge elements
 			App.theme.FULL_TABS = true;
 			App.theme.ELEMENT_H = 24 + 4;
 			App.theme.BUTTON_H = 22 + 4;
 			App.theme.FONT_SIZE = 13 + 2;
+			App.theme.ARROW_SIZE = 5 + 2;
+			App.theme.CHECK_SIZE = 15 + 4;
+			App.theme.CHECK_SELECT_SIZE = 8 + 2;
 			buttonAlign = zui.Zui.Align.Center;
 			buttonSpacing = "";
 		}
