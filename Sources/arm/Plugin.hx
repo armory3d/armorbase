@@ -48,9 +48,11 @@ class Plugin {
 @:keep
 class Keep {
 	public static function keep() {
-		var x = iron.system.ArmPack.decode;
-		var y = iron.system.ArmPack.encode;
-		return [x, y];
+		return untyped [
+			iron.system.ArmPack.decode,
+			iron.system.ArmPack.encode,
+			arm.ui.UIBox.showMessage
+		];
 	}
 }
 
