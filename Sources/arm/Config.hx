@@ -71,16 +71,25 @@ class Config {
 			raw.window_resizable = true;
 			raw.window_minimizable = true;
 			raw.window_maximizable = true;
+			var disp = Display.primary;
+			#if (krom_darwin || krom_windows || krom_linux)
+			raw.window_w = Std.int(Math.min(1600,Std.int(0.9*disp.width)));
+			raw.window_h = Std.int(Math.min(900, Std.int(0.8*disp.height)));
+			raw.window_x = Std.int(0.05*disp.width);
+			raw.window_y = Std.int(0.1*disp.height);
+			#else
 			raw.window_w = 1600;
 			raw.window_h = 900;
+			raw.window_x = -1;
+			raw.window_y = -1;
+			#end
 			#if krom_darwin
 			raw.window_w *= 2;
 			raw.window_h *= 2;
 			#end
-			raw.window_x = -1;
-			raw.window_y = -1;
+			
 			raw.window_scale = 1.0;
-			var disp = Display.primary;
+			
 			if (disp.width >= 2560 && disp.height >= 1600) {
 				raw.window_scale = 2.0;
 			}
