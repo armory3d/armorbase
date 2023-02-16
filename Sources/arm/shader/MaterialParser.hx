@@ -434,6 +434,9 @@ class MaterialParser {
 		else if (node.type == 'GROUP_INPUT') {
 			return parse_group_input(node, socket);
 		}
+		else if (node.type == 'MATERIAL_INPUT') {
+			return vec3(socket.default_value);
+		}
 		else if (node.type == "ATTRIBUTE") {
 			if (socket == node.outputs[0]) { // Color
 				if (curshader.context.allow_vcols) {
@@ -1142,6 +1145,9 @@ class MaterialParser {
 		else if (node.type == 'GROUP_INPUT') {
 			return parse_group_input(node, socket);
 		}
+		else if (node.type == 'MATERIAL_INPUT') {
+			return Std.string(socket.default_value);
+		}
 		else if (node.type == "ATTRIBUTE") {
 			curshader.add_uniform("float time", "_time");
 			return "time";
@@ -1717,7 +1723,7 @@ class MaterialParser {
 	}
 
 	static function res_var_name(node: TNode, socket: TNodeSocket): String {
-		return node_name(node) + "_" + safesrc(socket.name) + "_res";
+		return node_name(node) + "_" + safesrc(socket.name + Std.string(socket.id)) + "_res"; // Add id to allow sockets having the same name.
 	}
 
 	static var parsedMap = new Map<String, String>();
